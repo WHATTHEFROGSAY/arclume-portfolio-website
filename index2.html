@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>ARCLUME — Portfolio 2025</title>
+   <style>
+      :root {
+         --bg: #0a0a0f;
+         --panel: #10111a;
+         --panel2: #161728;
+         --txt: #e6e8ff;
+         --muted: #b7c0ff;
+         --cyan: #00e7ff;
+         --mag: #ff4dff;
+         --lime: #caff72;
+         --grid: rgba(255, 255, 255, .06)
+      }
+      @font-face {
+         font-family: 'YourFontName';
+         src: url('../webfonts/your-font-regular.woff2') format('woff2'),
+              url('../webfonts/your-font-regular.woff') format('woff');
+         font-weight: 400;
+         font-style: normal;
+      }
+
+      @font-face {
+         font-family: 'YourFontName';
+         src: url('../portfolio-website-main/assets/webfonts/CircularSpotifyText-Bold.otf') format('otf'),
+              url('../portfolio-website-main/assets/webfonts/CircularSpotifyText-Light.otf') format('otf');
+         font-weight: 700;
+         font-style: normal;
+      }
+
+      * {
+         box-sizing: border-box
+      }
+
+      html,
+      body {
+         margin: 0;
+         height: 100%;
+         background: var(--bg);
+         color: var(--txt);
+         font-family:'CircularSpotifyText', system-ui, Segoe UI, Roboto, Helvetica, Arial
+      }
+
+      a {
+         color: var(--cyan);
+         text-decoration: none
+      }
+
+      img {
+         max-width: 100%;
+         display: block
+      }
+
+      /* neon grid background */
+      .bg-grid:before {
+         content: "";
+         position: fixed;
+         inset: 0;
+         background:
+            linear-gradient(transparent 0 98%, var(--grid) 99% 100%),
+            linear-gradient(90deg, transparent 0 98%, var(--grid) 99% 100%);
+         background-size: 40px 40px;
+         opacity: .35;
+         pointer-events: none;
+         z-index: -1
+      }
+
+      /* header */
+      header {
+         position: sticky;
+         top: 0;
+         z-index: 50;
+         background: linear-gradient(180deg, rgba(10, 10, 15, .8), rgba(10, 10, 15, .2));
+         backdrop-filter: blur(8px);
+         border-bottom: 1px solid rgba(255, 255, 255, .08)
+      }
+
+      .nav {
+         max-width: 1200px;
+         margin: auto;
+         display: flex;
+         align-items: center;
+         gap: 16px;
+         padding: 14px 20px
+      }
+
+      .brand {
+         font-weight: 700;
+         letter-spacing: .08em
+      }
+
+      .brand b {
+         color: var(--cyan)
+      }
+
+      .nav a {
+         opacity: .9
+      }
+
+      .spacer {
+         flex: 1
+      }
+
+      .btn {
+         padding: 10px 14px;
+         border: 1px solid rgba(255, 255, 255, .14);
+         border-radius: 10px;
+         background: linear-gradient(135deg, rgba(0, 231, 255, .14), rgba(255, 77, 255, .12));
+      }
+
+      .btn:hover {
+         border-color: var(--cyan)
+      }
+
+      /* hero */
+      .hero {
+         max-width: 1200px;
+         margin: 40px auto;
+         padding: 0 20px;
+         display: grid;
+         grid-template-columns: 1.1fr .9fr;
+         gap: 28px
+      }
+
+      .card {
+         background: linear-gradient(135deg, var(--panel), var(--panel2));
+         border: 1px solid rgba(255, 255, 255, .10);
+         border-radius: 16px;
+         box-shadow: 0 12px 40px rgba(0, 0, 0, .45)
+      }
+
+      .hero .intro {
+         padding: 28px
+      }
+
+      .kicker {
+         color: var(--lime);
+         font-size: .9rem;
+         letter-spacing: .14em;
+         text-transform: uppercase
+      }
+
+      h1 {
+         font-size: 40px;
+         margin: 6px 0 14px;
+         line-height: 1.08
+      }
+
+      .spark {
+         background: linear-gradient(90deg, var(--cyan), var(--mag));
+         -webkit-background-clip: text;
+         background-clip: text;
+         color: transparent
+      }
+
+      .sub {
+         color: var(--muted);
+         margin: 10px 0 18px
+      }
+
+      .tags {
+         display: flex;
+         flex-wrap: wrap;
+         gap: 8px;
+         margin: 16px 0
+      }
+
+      .tag {
+         border: 1px solid rgba(255, 255, 255, .12);
+         padding: 6px 10px;
+         border-radius: 999px;
+         font-size: .85rem;
+         background: rgba(0, 0, 0, .2)
+      }
+
+      .cta {
+         display: flex;
+         gap: 12px;
+         margin-top: 8px
+      }
+
+      .hero .showcase {
+         padding: 0;
+         overflow: hidden
+      }
+
+      .marquee {
+         display: flex;
+         gap: 12px;
+         align-items: center;
+         padding: 12px;
+         background: radial-gradient(150% 120% at 0% 0%, rgba(0, 231, 255, .18), transparent 60%), radial-gradient(150% 120% at 100% 100%, rgba(255, 77, 255, .18), transparent 60%)
+      }
+
+      .thumb {
+         min-width: 260px;
+         aspect-ratio: 16/10;
+         border-radius: 12px;
+         border: 1px solid rgba(255, 255, 255, .12);
+         background: #0f111b url('https://via.placeholder.com/640x400/0f111b/8aa2ff?text=Project') center/cover no-repeat
+      }
+
+      .marquee.animate {
+         animation: scroll 26s linear infinite
+      }
+
+      @keyframes scroll {
+         from {
+            transform: translateX(0)
+         }
+
+         to {
+            transform: translateX(-50%)
+         }
+      }
+
+      /* section */
+      .section {
+         max-width: 1200px;
+         margin: 30px auto;
+         padding: 0 20px
+      }
+
+      .section h2 {
+         font-size: 22px;
+         margin: 10px 0 14px
+      }
+
+      .section h2 .spark {
+         font-weight: 700
+      }
+
+      /* filters */
+      .filters {
+         display: flex;
+         gap: 8px;
+         flex-wrap: wrap;
+         margin-bottom: 12px
+      }
+
+      .chip {
+         padding: 8px 12px;
+         border-radius: 999px;
+         border: 1px solid rgba(255, 255, 255, .14);
+         cursor: pointer;
+         font-size: .9rem
+      }
+
+      .chip.active {
+         border-color: var(--cyan);
+         box-shadow: 0 0 0 2px rgba(0, 231, 255, .18) inset
+      }
+
+      /* project grid */
+      .grid {
+         display: grid;
+         grid-template-columns: repeat(3, 1fr);
+         gap: 16px
+      }
+
+      .project {
+         position: relative;
+         overflow: hidden;
+         border-radius: 14px;
+         border: 1px solid rgba(255, 255, 255, .12);
+         background: linear-gradient(135deg, #0e0f17, #171a2c)
+      }
+
+      .project .cover {
+         aspect-ratio: 16/10;
+         background: #0f111b url('https://via.placeholder.com/640x400/0f111b/8aa2ff?text=Cover') center/cover
+      }
+
+      .project .meta {
+         padding: 12px
+      }
+
+      .project .meta h3 {
+         margin: 0 0 6px;
+         font-size: 1rem
+      }
+
+      .pill {
+         display: inline-block;
+         margin-right: 6px;
+         margin-top: 6px;
+         font-size: .75rem;
+         padding: 4px 8px;
+         border-radius: 999px;
+         border: 1px solid rgba(255, 255, 255, .14);
+         color: var(--muted)
+      }
+
+      /* case study */
+      .cs {
+         display: grid;
+         grid-template-columns: 1fr 1fr;
+         gap: 16px
+      }
+
+      .cs .frame {
+         border-radius: 14px;
+         border: 1px solid rgba(255, 255, 255, .1);
+         background: #0f111b;
+         min-height: 200px;
+         background-image: linear-gradient(135deg, rgba(0, 231, 255, .15), rgba(255, 77, 255, .12));
+      }
+
+      .cs .copy {
+         padding: 6px 0
+      }
+
+      /* about */
+      .about {
+         display: grid;
+         grid-template-columns: 1fr 1fr;
+         gap: 16px
+      }
+
+      .stat {
+         background: linear-gradient(135deg, rgba(0, 231, 255, .08), rgba(255, 77, 255, .06));
+         border: 1px solid rgba(255, 255, 255, .12);
+         border-radius: 14px;
+         padding: 16px;
+         text-align: center
+      }
+
+      .stat b {
+         font-size: 28px;
+         color: var(--lime)
+      }
+
+      /* contact */
+      .footer {
+         margin: 40px 0 60px
+      }
+
+      .card.inline {
+         display: flex;
+         align-items: center;
+         gap: 16px;
+         padding: 14px
+      }
+
+      .qr {
+         width: 96px;
+         height: 96px;
+         border-radius: 12px;
+         border: 1px solid rgba(255, 255, 255, .14);
+         background: #0f111b url('../images/DungeonKnight/QR.png') center/cover
+      }
+       /* LIGHTBOX */
+         .lightbox {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, .7);
+            backdrop-filter: blur(6px);
+            z-index: 60
+         }
+
+         .lightbox.open {
+            display: flex
+         }
+
+         .lb-wrap {
+            position: relative;
+            max-width: min(92vw, 1100px);
+            max-height: 86vh;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, .16);
+            background: linear-gradient(135deg, #0e0f17, #171a2c);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, .6);
+            overflow: hidden
+         }
+
+         .lb-media {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 640px;
+            min-height: 360px
+         }
+
+         .lb-media img {
+            max-width: 100%;
+            max-height: 70vh;
+            border-bottom: 1px solid rgba(255, 255, 255, .08)
+         }
+
+         .lb-meta {
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+         }
+
+         .lb-title {
+            font-weight: 700
+         }
+
+         .lb-ctrls {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            pointer-events: none
+         }
+
+         .lb-btn {
+            pointer-events: auto;
+            user-select: none;
+            border: 1px solid rgba(255, 255, 255, .18);
+            background: linear-gradient(135deg, rgba(0, 231, 255, .18), rgba(255, 77, 255, .12));
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin: 10px;
+            cursor: pointer
+         }
+
+         .lb-close {
+            position: absolute;
+            top: 10px;
+            right: 10px
+         }
+      /* responsive */
+      @media (max-width:1024px) {
+         .hero {
+            grid-template-columns: 1fr
+         }
+
+         .grid {
+            grid-template-columns: repeat(2, 1fr)
+         }
+
+         .cs {
+            grid-template-columns: 1fr
+         }
+
+         .about {
+            grid-template-columns: 1fr 1fr
+         }
+      }
+
+      @media (max-width:640px) {
+         .grid {
+            grid-template-columns: 1fr
+         }
+
+         .nav {
+            flex-wrap: wrap
+         }
+      }
+
+      /* Add catalog styles */
+   .catalog {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 20px;
+   }
+
+   .toc {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+   }
+
+   .toc a {
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--txt);
+      transition: 0.2s;
+   }
+
+   .toc a:hover {
+      background: rgba(255, 255, 255, 0.1);
+   }
+
+   .toc a.active {
+      background: linear-gradient(135deg, rgba(0, 231, 255, .14), rgba(255, 77, 255, .12));
+      border: 1px solid rgba(255, 255, 255, .14);
+   }
+
+   @keyframes fade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+   }
+
+   /* Catalog grid */
+.catalog-grid{display:grid;grid-template-columns:repeat(auto-fit, 220px);gap:12px}
+.catalog-item{border:1px solid rgba(255,255,255,.12);border-radius:12px;overflow:hidden;cursor:pointer;background:linear-gradient(135deg,#0e0f17,#171a2c)}
+.catalog-thumb{aspect-ratio:16/10;background:#0f111b center/cover no-repeat}
+.catalog-meta{padding:10px;font-size:.9rem;opacity:.9}
+@media (max-width:640px){.catalog-grid{grid-template-columns:1fr}}
+
+
+
+
+   </style>
+</head>
+<body class="bg-grid">
+  <header>
+    <nav class="nav">
+      <div class="brand">ARC<b>LUME</b></div>
+      <a href="#work">Work</a>
+      <a href="#case">Case Studies</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <div class="spacer"></div>
+      <a class="btn" href="#" download>Download CV</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="card intro">
+      <div class="kicker">Independent Artist • Concept Designer</div>
+      <h1>Crafting <span class="spark">immersive worlds</span> and bold identities for games & brands.</h1>
+      <p class="sub">Pixel art • Visual design • Packaging • UI/UX • Worldbuilding. Blending sci‑fi aesthetics with clear storytelling to spark emotion and momentum.</p>
+      <div class="tags">
+        <span class="tag">Pixel Art</span>
+        <span class="tag">Game UI</span>
+        <span class="tag">Packaging</span>
+        <span class="tag">Brand Visuals</span>
+        <span class="tag">Illustration</span>
+      </div>
+      <div class="cta">
+        <a class="btn" href="#work">See Projects</a>
+        <a class="btn" href="#contact">Hire Me</a>
+      </div>
+    </div>
+    <div class="card showcase">
+      <div class="marquee animate">
+              <div class="marquee animate">
+        <div class="thumb" style="background-image:url('./images/DungeonKnight/justtest.png');"></div>
+        <div class="thumb" style="background-image:url('./images/DungeonKnight/enemy21.png');"></div>
+        <div class="thumb" style="background-image:url('./images/DungeonKnight/CV_Logo.png');"></div>
+        <div class="thumb" style="background-image:url('./images/DungeonKnight/Greennut_logo.png');"></div>
+        <!-- Repeat for animation -->
+        <div class="thumb" style="background-image:url('./images/DungeonKnight/justtest.png');"></div>
+        <div class="thumb" style="background-image:url('./images/DungeonKnight/enemy21.png');"></div>
+        <div class="thumb" style="background-image:url('./images/DungeonKnight/CV_Logo.png');"></div>
+      </div>      
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="section">
+    <h2><span class="spark">Featured Work</span></h2>
+    <div class="filters">
+      <button class="chip active" data-filter="all">All</button>
+      <button class="chip" data-filter="pixel">Pixel</button>
+      <button class="chip" data-filter="ui">Game UI</button>
+      <button class="chip" data-filter="packaging">Packaging</button>
+      <button class="chip" data-filter="brand">Brand</button> 
+      <button class="chip" data-filter="publishing">Publishing</button>
+    </div>
+    <div class="grid" id="grid">
+      <!-- Pixel Art project -->
+<article class="project" data-tags="pixel" data-title="Dungeon Knight — Sprite Set"
+         data-gallery="./images/DungeonKnight/QR.png, ./images/DungeonKnight/Morgrath_the_Ironhid5.png, ./images/DungeonKnight/QR.png">
+        <div class="cover" style="background-image:url('../images/DungeonKnight/enemy21.png');"></div>
+        <div class="meta">
+          <h3>Dungeon Knight — Sprite Set</h3>
+          <span class="pill">Pixel</span><span class="pill">Animation</span>
+        </div>
+      </article>
+
+      <!-- UI project -->
+      <article class="project" data-tags="ui">
+        <div class="cover" style="background-image:url('../images/DungeonKnight/justtest.png');"></div>
+        <div class="meta">
+          <h3>Rogue UI — HUD & Cards</h3>
+          <span class="pill">Game UI</span><span class="pill">Systems</span>
+        </div>
+      </article>
+
+      <!-- Packaging project -->
+      <article class="project" data-tags="packaging brand">
+        <div class="cover" style="background-image:url('../images/DungeonKnight/justtest.png');"></div>
+        <div class="meta">
+          <h3>Poorify Quest — Visuals</h3>
+          <span class="pill">Art</span><span class="pill">Theme</span>
+        </div>
+      </article>
+
+      <!-- Brand project -->
+      <article class="project" data-tags="brand">
+        <div class="cover" style="background-image:url('../images/DungeonKnight/CV_Logo.png');"></div>
+        <div class="meta">
+          <h3>ARCLUME — Logo System</h3>
+          <span class="pill">Brand</span><span class="pill">Identity</span>
+        </div>
+      </article>
+
+      <!-- Publishing project -->
+      <article class="project" data-tags="publishing" data-title="Publishing — Layouts"
+         data-gallery="./images/DungeonKnight/Greennut_logo.png, ./images/DungeonKnight/QR.png">
+        <div class="cover" style="background-image:url('../images/DungeonKnight/Greennut_logo.png');"></div>
+        <div class="meta">
+          <h3>Publishing</h3>
+          <span class="pill">Publishing</span>
+        </div>
+      </article>      
+
+    </div>
+  </section>
+
+<!-- CATALOG with animated reveal -->
+<section id="catalog" class="section">
+<h2><span class="spark">Catalog</span> — Quick Jump</h2>
+<div class="catalog">
+<nav class="toc" aria-label="Catalog navigation">
+<h3>Categories</h3>
+<a href="#" data-target="pixel" class="active">Pixel Art</a>
+<a href="#" data-target="ui">Game UI</a>
+<a href="#" data-target="packaging">Packaging</a>
+<a href="#" data-target="brand">Brand</a>
+<a href="#" data-target="all">All</a>
+</nav>
+<div class="card" id="catalog-show" style="padding:16px;min-height:280px;display:grid;place-items:center;text-align:center">
+<div>
+<div style="font-size:20px;margin-bottom:8px">Choose a category to preview</div>
+<div class="sub">An animated showcase will appear here and the grid will filter below.</div>
+</div>
+</div>
+</div>
+</section>
+
+
+
+  <section id="case" class="section">
+    <h2><span class="spark">Case Studies</span></h2>
+    <div class="cs">
+      <div class="frame"></div>
+      <div class="copy">
+        <h3>Genshin Impact — Game Localization Translator</h3>
+        <p class="sub">Bringing immersive fantasy worlds to global audiences through precise translation, cultural adaptation, and narrative flow.</p>
+        <p class="sub">Role: Dialogue adaptation, in-game text localization, cultural nuance alignment, QA review.</p>
+        <p><a class="btn" href="#">Open Case</a></p>
+      </div>
+      <div class="frame"></div>
+      <div class="copy">
+        <h3>Dungeon Knight — Pixel Pipeline</h3>
+        <p class="sub">From tilesets and sprites to traps and boss silhouettes; established palette, animation cadence, and readable combat FX.</p>
+        <p><a class="btn" href="#">Open Case</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section">
+    <h2><span class="spark">About & Skills</span></h2>
+    <div class="about">
+      <div class="card" style="padding:16px">
+        <p>Where design meets imagination!</p>
+        <p><b>My name is Arclume. </b>I am a creative artist who fuses language and imagery to construct worlds, characters and narratives rich in emotion.</p>
+        <p>Guided by an enduring passion for storytelling through design, I seek to transform abstract ideas into immersive worlds where narratives come alive.</p>
+        <p>Through these worlds, I aim to awaken inspiration, ignite imagination, and etch a lasting impression upon every soul I reach. </p>
+        <ul>
+          <li>Tools: Illustrator, Photoshop, Aseprite, Figma</li>
+          <li>Focus: Game art, packaging, visual identity</li>
+          <li>Values: Precision, play, collaboration</li>
+        </ul>
+      </div>
+      <div class="stat"><b>50+ </b><div>deliverables shipped</div></div>
+      <div class="stat"><b>10</b><div>game prototypes</div></div>
+      <div class="stat"><b>3+</b><div>months creating</div></div>
+    </div>
+  </section>
+
+  <section id="contact" class="section footer">
+    <h2><span class="spark">Contact</span></h2>
+    <div class="card inline">
+      <div class="qr"></div>
+      <div>
+        <div style="font-weight:700">arclume@valvesoftware.com</div>
+        <div class="sub">SaiGon City • Available for freelance & collaborations</div>
+        <div class="cta" style="margin-top:8px">
+          <a class="btn" href="#">Behance</a>
+          <a class="btn" href="#">ArtStation</a>
+          <a class="btn" href="#">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- LIGHTBOX STRUCTURE -->
+<div class="lightbox" id="lightbox" aria-modal="true" role="dialog">
+<div class="lb-wrap">
+<div class="lb-ctrls">
+<button class="lb-btn lb-prev" aria-label="Previous">◀</button>
+<button class="lb-btn lb-next" aria-label="Next">▶</button>
+</div>
+<button class="lb-btn lb-close" aria-label="Close">✕</button>
+<div class="lb-media"><img id="lb-img" alt="lightbox image"/></div>
+<div class="lb-meta">
+<div class="lb-title" id="lb-title">Title</div>
+<div class="spacer"></div>
+<span class="pill" id="lb-count">1/1</span>
+</div>
+</div>
+</div>
+
+
+<script>
+// ====== QUERY ELEMENTS ======
+const chips = [...document.querySelectorAll('.chip')];
+const cards = [...document.querySelectorAll('.project')];
+const tocLinks = [...document.querySelectorAll('.toc a')];
+const catalogShow = document.getElementById('catalog-show');
+
+// ====== LIGHTBOX ======
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbTitle = document.getElementById('lb-title');
+const lbCount = document.getElementById('lb-count');
+const prevBtn = lb.querySelector('.lb-prev');
+const nextBtn = lb.querySelector('.lb-next');
+const closeBtn = lb.querySelector('.lb-close');
+let gallery = [], idx = 0;
+
+function openLB(images, title){ gallery = images; idx = 0; updateLB(title); lb.classList.add('open'); document.body.style.overflow='hidden'; }
+function updateLB(title){ lbImg.src = gallery[idx]; lbTitle.textContent = title; lbCount.textContent = `${idx+1}/${gallery.length}`; }
+function closeLB(){ lb.classList.remove('open'); document.body.style.overflow=''; }
+
+prevBtn.addEventListener('click',()=>{ idx = (idx-1+gallery.length)%gallery.length; updateLB(lbTitle.textContent); });
+nextBtn.addEventListener('click',()=>{ idx = (idx+1)%gallery.length; updateLB(lbTitle.textContent); });
+closeBtn.addEventListener('click',closeLB);
+lb.addEventListener('click',e=>{ if(e.target===lb) closeLB(); });
+window.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open')) return;
+  if(e.key==='Escape') closeLB();
+  if(e.key==='ArrowRight') nextBtn.click();
+  if(e.key==='ArrowLeft') nextBtn.click();
+});
+
+// ====== HELPERS ======
+const parseTags = (node) => (node.dataset.tags||'')
+  .toLowerCase()
+  .trim()
+  .split(/\s+/)
+  .filter(Boolean);
+
+// ====== FEATURED GRID FILTER ======
+function applyFilter(f='all'){
+  const filter = (f||'all').toLowerCase();
+  cards.forEach(card=>{
+    const tags = parseTags(card);
+    card.style.display = (filter==='all' || tags.includes(filter)) ? '' : 'none';
+  });
+}
+
+// Click card mở lightbox (dùng cover hoặc gallery)
+cards.forEach(card=>{
+  card.addEventListener('click',()=>{
+    const title = card.dataset.title || card.querySelector('h3')?.textContent?.trim() || 'Project';
+    const galleryArr = (card.dataset.gallery||'').split(',').map(s=>s.trim()).filter(Boolean);
+    const coverMatch = card.querySelector('.cover')?.style.backgroundImage.match(/url\(['"]?([^'")]+)['"]?\)/);
+    const cover = coverMatch ? coverMatch[1] : '';
+    const imgs = galleryArr.length ? galleryArr : (cover ? [cover] : []);
+    if(imgs.length) openLB(imgs, title);
+  });
+});
+
+// ====== BUILD CATALOG INDEX TỪ FEATURED ======
+function getProjectData(card){
+  const title = card.dataset.title || card.querySelector('h3')?.textContent?.trim() || 'Project';
+  const tags = parseTags(card);
+  const gallery = (card.dataset.gallery||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const coverMatch = card.querySelector('.cover')?.style.backgroundImage.match(/url\(['"]?([^'")]+)['"]?\)/);
+  const cover = coverMatch ? coverMatch[1] : (gallery[0] || '');
+  return { title, tags, gallery, cover };
+}
+
+const allProjects = cards.map(getProjectData);
+const indexByTag = allProjects.reduce((acc,p)=>{
+  p.tags.forEach(t => (acc[t] ??= []).push(p));
+  return acc;
+}, {});
+indexByTag.all = allProjects;
+
+// ====== RENDER CATALOG ======
+function renderCatalog(tag='all'){
+  const list = indexByTag[tag] || [];
+  catalogShow.innerHTML = list.length ? `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="sub" aria-live="polite"><b>${tag.toUpperCase()}</b> • ${list.length} project(s)</div>
+    </div>
+    <div class="catalog-grid">
+      ${list.map((p,i)=>`
+        <div class="catalog-item" data-idx="${i}">
+          <div class="catalog-thumb" style="background-image:url('${p.cover}')"></div>
+          <div class="catalog-meta">${p.title}</div>
+        </div>`).join('')}
+    </div>` : `
+    <div style="text-align:center;padding:20px">
+      <div style="font-size:18px;margin-bottom:6px">No items in “${tag}”.</div>
+      <div class="sub">Add <code>data-tags="${tag}</code> vào một vài project để hiện ở đây.</div>
+    </div>`;
+
+  // click item Catalog → mở lightbox
+  catalogShow.querySelectorAll('.catalog-item').forEach(tile=>{
+    tile.addEventListener('click',()=>{
+      const i = +tile.dataset.idx;
+      const p = list[i];
+      const imgs = p.gallery.length ? p.gallery : (p.cover ? [p.cover] : []);
+      if(imgs.length) openLB(imgs, p.title);
+    });
+  });
+}
+
+// ====== WIRING: TOC (Catalog) & CHIPS (Featured) ======
+tocLinks.forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    tocLinks.forEach(t=>t.classList.remove('active'));
+    a.classList.add('active');
+    const tag = a.dataset.target;
+    renderCatalog(tag);
+    applyFilter(tag);
+    document.querySelector('#work').scrollIntoView({behavior:'smooth'});
+  });
+});
+
+chips.forEach(ch=>{
+  ch.addEventListener('click',()=>{
+    chips.forEach(c=>c.classList.remove('active'));
+    ch.classList.add('active');
+    const tag = ch.dataset.filter;
+    applyFilter(tag);
+    // đồng bộ trạng thái bên mục TOC
+    tocLinks.forEach(t=>t.classList.toggle('active', t.dataset.target===tag));
+    renderCatalog(tag);
+  });
+});
+
+// ====== INIT: dùng tag đang active trong TOC thay vì "all" ======
+const initTag = document.querySelector('.toc a.active')?.dataset.target || 'all';
+renderCatalog(initTag);
+applyFilter(initTag);
+// đồng bộ chip active theo TOC
+chips.forEach(c=>c.classList.toggle('active', c.dataset.filter===initTag));
+</script>
+
+
+</body>
+</html>
