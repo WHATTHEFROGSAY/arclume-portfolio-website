@@ -17,19 +17,27 @@
          --grid: rgba(255, 255, 255, .06)
       }
       @font-face {
-         font-family: 'YourFontName';
-         src: url('../webfonts/your-font-regular.woff2') format('woff2'),
-              url('../webfonts/your-font-regular.woff') format('woff');
+         font-family: 'CircularSpotifyText';
+         src: url('./assets/webfonts/CircularSpotifyText-Light.otf') format('opentype');              
+         font-weight: 300;
+         font-style: normal;
+         font-display: swap;
+      }
+      @font-face {
+         font-family: 'CircularSpotifyText';
+         src: url('./assets/webfonts/CircularSpotifyText-Bold.otf') format('opentype');              
          font-weight: 400;
          font-style: normal;
+         font-display: swap;
       }
 
       @font-face {
-         font-family: 'YourFontName';
+         font-family: 'CircularSpotifyText';
          src: url('../portfolio-website-main/assets/webfonts/CircularSpotifyText-Bold.otf') format('otf'),
               url('../portfolio-website-main/assets/webfonts/CircularSpotifyText-Light.otf') format('otf');
          font-weight: 700;
          font-style: normal;
+         font-display: swap;
       }
 
       * {
@@ -351,7 +359,7 @@
          height: 96px;
          border-radius: 12px;
          border: 1px solid rgba(255, 255, 255, .14);
-         background: #0f111b url('../images/DungeonKnight/QR.png') center/cover
+         background: #0f111b url('./images/DungeonKnight/QR.png') center/cover
       }
        /* LIGHTBOX */
          .lightbox {
