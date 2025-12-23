@@ -24,17 +24,15 @@
          font-display: swap;
       }
       @font-face {
-         font-family: 'CircularSpotifyText';
-         src: url('./assets/webfonts/CircularSpotifyText-Bold.otf') format('opentype');              
-         font-weight: 400;
-         font-style: normal;
-         font-display: swap;
-      }
-
+  font-family: 'CircularSpotifyText';
+  src: url('./assets/webfonts/CircularSpotifyText-Regular.otf') format('opentype');
+  font-weight: 400; /* Regular */
+  font-style: normal;
+  font-display: swap;
+}
       @font-face {
          font-family: 'CircularSpotifyText';
-         src: url('../portfolio-website-main/assets/webfonts/CircularSpotifyText-Bold.otf') format('otf'),
-              url('../portfolio-website-main/assets/webfonts/CircularSpotifyText-Light.otf') format('otf');
+         src: url('./assets/webfonts/CircularSpotifyText-Bold.otf') format('opentype');              
          font-weight: 700;
          font-style: normal;
          font-display: swap;
@@ -226,6 +224,105 @@
          }
       }
 
+/* Campaign Slides */
+#campaigns { max-width:1200px; margin:40px auto; padding:0 20px; }
+#campaigns h2 { font-size:22px; margin:0 0 14px; }
+
+.slider {
+  position:relative;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.12);
+  overflow:hidden;
+  background:linear-gradient(135deg,#0e0f17,#171a2c);
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+.slides {
+  display:flex;
+  transition:transform .8s cubic-bezier(.25,.8,.25,1);
+}
+
+.slide {
+  min-width:100%;
+  aspect-ratio:16/7;
+  position:relative;
+  display:flex;
+  align-items:flex-end;
+  background:#0f111b center/cover no-repeat;
+}
+/* overlay nhẹ để ảnh sáng hơn */
+.slide:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  /* giảm độ tối đáng kể */
+  background:none;
+}
+.slides{ will-change: transform; }
+.slide{ transform: translateZ(0); }
+
+.caption {
+  position:relative;
+  z-index:2;
+  margin:20px;
+  padding:14px 18px;
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(0,231,255,.25),rgba(255,77,255,.25));
+  border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(8px);
+  color:#fff;
+  font-size:15px;
+  max-width:60%;
+}
+.caption b {
+  font-size:18px;
+  display:block;
+  margin-bottom:6px;
+  color:var(--cyan);
+}
+
+.ctrl { position:absolute; inset:0; display:flex; align-items:center; justify-content:space-between; pointer-events:none; }
+.ctrl button {
+  pointer-events:auto;
+  border:none;
+  border-radius:50%;
+  width:42px;height:42px;
+  background:rgba(0,0,0,.4);
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+  margin:0 10px;
+  transition:.3s;
+}
+.ctrl button:hover { background:var(--cyan); color:#000; }
+
+.dots {
+  position:absolute; bottom:14px; left:50%; transform:translateX(-50%);
+  display:flex; gap:8px; z-index:5;
+}
+.dot {
+  width:10px;height:10px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.6);
+  background:rgba(255,255,255,.2);
+  cursor:pointer;
+  transition:.3s;
+}
+.dot.active { background:var(--cyan); border-color:var(--cyan); }
+
+.progress {
+  position:absolute; top:0; left:0; right:0; height:3px;
+  background:rgba(255,255,255,.15);
+}
+.progress .bar {
+  height:100%; width:0;
+  background:linear-gradient(90deg,var(--cyan),var(--mag));
+}
+
+
+
+
+
       /* section */
       .section {
          max-width: 1200px;
@@ -288,6 +385,7 @@
       }
 
       .project .meta h3 {
+         
          margin: 0 0 6px;
          font-size: 1rem
       }
@@ -310,13 +408,32 @@
          gap: 16px
       }
 
-      .cs .frame {
-         border-radius: 14px;
-         border: 1px solid rgba(255, 255, 255, .1);
-         background: #0f111b;
-         min-height: 200px;
-         background-image: linear-gradient(135deg, rgba(0, 231, 255, .15), rgba(255, 77, 255, .12));
-      }
+      .cs .frame{
+  position: relative;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.1);
+  overflow: hidden;
+  /* bỏ background mặc định để không luôn hiển thị */
+  background: none;
+  min-height: unset;                /* giao cho ảnh quyết định chiều cao */
+  aspect-ratio: 16/9;               /* hoặc 4/3 tùy bạn */
+}
+
+/* Khi CHƯA có ảnh (khung rỗng) mới hiện placeholder */
+.cs .frame:empty{
+  min-height: 200px;
+  background: linear-gradient(135deg, rgba(0,231,255,.15), rgba(255,77,255,.12));
+}
+
+/* Ảnh nằm gọn trong khung */
+.cs .frame > img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                /* lấp đầy khung, đẹp kiểu portfolio */
+  display: block;
+
+}
+
 
       .cs .copy {
          padding: 6px 0
@@ -502,12 +619,53 @@
    }
 
    /* Catalog grid */
-.catalog-grid{display:grid;grid-template-columns:repeat(auto-fit, 220px);gap:12px}
-.catalog-item{border:1px solid rgba(255,255,255,.12);border-radius:12px;overflow:hidden;cursor:pointer;background:linear-gradient(135deg,#0e0f17,#171a2c)}
-.catalog-thumb{aspect-ratio:16/10;background:#0f111b center/cover no-repeat}
-.catalog-meta{padding:10px;font-size:.9rem;opacity:.9}
-@media (max-width:640px){.catalog-grid{grid-template-columns:1fr}}
+/* Catalog grid: 4 → 3 → 2 → 1 cột, luôn căn giữa */
+.catalog-grid{
+  display:grid;
+  gap:16px;
+  grid-template-columns: repeat(4, 220px); /* Desktop: 4 cột */
+  justify-content: center;                 /* căn giữa toàn bộ lưới */
+}
+    /* In đậm tiêu đề chỉ trong Catalog */
+.catalog-meta{
+  font-weight: 550;
+  padding:10px;
+  font-size:.9rem;
+  opacity:.9;
+  white-space: pre-line;   /* <-- thêm dòng này */
+}
+    /* Chỉ canh giữa tiêu đề có class .center-title */
+.center-title { 
+  text-align: center; 
+}
 
+.catalog-item{
+  width:220px;                             /* khớp với kích thước cột */
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  background:linear-gradient(135deg,#0e0f17,#171a2c);
+}
+.catalog-thumb{
+  aspect-ratio:16/10;
+  background:#0f111b center/cover no-repeat;
+}
+
+
+/* ≤1200px: 3 cột */
+@media (max-width:1200px){
+  .catalog-grid{ grid-template-columns: repeat(3, 220px); }
+}
+/* ≤900px: 2 cột */
+@media (max-width:900px){
+  .catalog-grid{ grid-template-columns: repeat(2, 220px); }
+}
+/* ≤580px: 1 cột full width */
+@media (max-width:580px){
+  .catalog-grid{ grid-template-columns: 1fr; }
+  .catalog-item{ width:auto; }
+}
 
 
 
@@ -529,7 +687,7 @@
   <section class="hero">
     <div class="card intro">
       <div class="kicker">Independent Artist • Concept Designer</div>
-      <h1>Crafting <span class="spark">immersive worlds</span> and bold identities for games & brands.</h1>
+      <h1><span class="highlight">Crafting <span class="spark">immersive worlds</span> and bold identities for games & brands.</span></h1>
       <p class="sub">Pixel art • Visual design • Packaging • UI/UX • Worldbuilding. Blending sci‑fi aesthetics with clear storytelling to spark emotion and momentum.</p>
       <div class="tags">
         <span class="tag">Pixel Art</span>
@@ -570,8 +728,8 @@
       <button class="chip" data-filter="publishing">Publishing</button>
     </div>
     <div class="grid" id="grid">
-      <!-- Pixel Art project -->
-<article class="project" data-tags="pixel" data-title="Dungeon Knight — Sprite Set"
+      <!-- Pixel Art project Catalog -->
+<article class="project" data-tags="pixel" data-hide-in-grid="1" data-title="Gourmet Quest — Sprite Set"
          data-gallery="./images/GourmetQuest/Gourmet_1.png, ./images/GourmetQuest/Gourmet_2.png, ./images/GourmetQuest/Gourmet_3.png">
         <div class="cover" style="background-image:url('./images/DungeonKnight/enemy21.png');"></div>
         <div class="meta">
@@ -579,7 +737,6 @@
           <span class="pill">Pixel</span><span class="pill">Animation</span>
         </div>
       </article>
-
       <!-- UI project -->
       <article class="project" data-tags="ui">
         <div class="cover" style="background-image:url('./images/Rogue_UI_HUD_cards/HUD_cards.png');"></div>
@@ -590,11 +747,11 @@
       </article>
 
       <!-- Packaging project -->
-      <article class="project" data-tags="packaging brand">
+      <article class="project" data-tags="pixel" data-tags="packaging brand">
         <div class="cover" style="background-image:url('./images/DungeonKnight/justtest.png');"></div>
         <div class="meta">
           <h3>Poorify Quest — Visuals</h3>
-          <span class="pill">Art</span><span class="pill">Theme</span>
+          <span class="pill">Art</span><span class="pill">Theme</span><span class="pill">Pixel</span>
         </div>
       </article>
 
@@ -618,7 +775,7 @@
 
       <!-- Publishing project -->
       <article class="project" data-tags="publishing" data-title="Publishing — Layouts"
-         data-gallery="./images/DungeonKnight/Greennut_logo.png, ./images/DungeonKnight/QR.png">
+         data-gallery="./images/PublicationDesign/Showcase_2.png, ./images/PublicationDesign/Showcase_1.png">
         <div class="cover" style="background-image:url('./images/PublicationDesign/Logo-01-01.png');"></div>
         <div class="meta">
           <h3>Publication Design</h3>
@@ -626,8 +783,22 @@
         </div>
       </article>      
 
+        <!-- Brand showcase -->
+      <article class="project" data-tags="publishing" data-title="Publishing — Layouts"
+         data-gallery="./images/BrandLogo/Product-02.png, ./images/BrandLogo/Product-03.png">
+        <div class="cover" style="background-image:url('./images/BrandLogo/Product-01.png');"></div>
+        <div class="meta">
+          <h3>Commercial Product Design</h3>
+          <span class="pill">Applied Branding</span><span class="pill">Visual Identity</span><span class="pill">Packaging</span>
+        </div>
+      </article>      
+
     </div>
   </section>
+
+
+
+
 
 <!-- CATALOG with animated reveal -->
 <section id="catalog" class="section">
@@ -639,6 +810,7 @@
 <a href="#" data-target="ui">Game UI</a>
 <a href="#" data-target="packaging">Packaging</a>
 <a href="#" data-target="brand">Brand</a>
+<a href="#" data-target="print">Print & Marketing</a>
 <a href="#" data-target="all">All</a>
 </nav>
 <div class="card" id="catalog-show" style="padding:16px;min-height:280px;display:grid;place-items:center;text-align:center">
@@ -650,17 +822,263 @@
 </div>
 </section>
 
+<!--CAMPAIGN SLIDES-->  
+<section id="campaigns">
+  <h2><span class="spark">Campaign Showcase</span></h2>
+  <div class="slider">
+    <div class="slides">
+      <!-- Slide 1 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_1.png')">
+        <div class="caption">
+          <b>Tết Campaign 2025</b>
+          Bringing festive vibes into vibrant branding visuals.
+        </div>
+      </div>
+      <!-- Slide 2 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_2.png')">
+        <div class="caption">
+          <b>Pepsi Bold</b>
+          Youthful energy • Y2K aesthetics • Global identity.
+        </div>
+      </div>
+      <!-- Slide 3 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_3.png')">
+        <div class="caption">
+          <b>GreenNut — Organic Pack</b>
+          Tết gift basket design for a modern lifestyle.
+        </div>
+      </div>
+         <!-- Slide 4 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_4.png')">
+        <div class="caption">
+        </div>
+      </div>
+         <!-- Slide 5 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_5.png')">
+        <div class="caption">
+        </div>
+      </div>
+         <!-- Slide 6 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_6.png')">
+        <div class="caption">
+        </div>
+      </div>
+         <!-- Slide 7 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_7.png')">
+        <div class="caption">
+        </div>
+      </div>
+               <!-- Slide 8 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_8.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                     <!-- Slide 9 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_9.png')">
+        <div class="caption">
+        </div>
+      </div> 
+               <!-- Slide 10 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_10.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                     <!-- Slide 11 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_11.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                    <!-- Slide 12 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_12.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                        <!-- Slide 13 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_13.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                        <!-- Slide 14 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_14.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                              <!-- Slide 15 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_15.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                              <!-- Slide 16 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_16.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                              <!-- Slide 17 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_17.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                              <!-- Slide 18 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_18.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                              <!-- Slide 19 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_19.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                        <!-- Slide 20 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_20.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                        <!-- Slide 21 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_21.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                              <!-- Slide 22 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_22.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                    <!-- Slide 23 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_23.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                    <!-- Slide 24 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_24.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                    <!-- Slide 25 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_25.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                    <!-- Slide 26 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_26.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                    <!-- Slide 27 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_27.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                    <!-- Slide 28 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_28.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                    <!-- Slide 29 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_29.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                    <!-- Slide 30 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_30.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 31 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_31.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 32 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_32.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                  <!-- Slide 33 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_33.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 34 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_34.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 35 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_35.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 36 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_36.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 37 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_37.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 38 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_38.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                  <!-- Slide 39 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_39.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 40 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_40.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 41 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_41.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                  <!-- Slide 42 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_42.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 43 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_43.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 44 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_44.png')">
+        <div class="caption">
+        </div>
+      </div> 
+                                        <!-- Slide 45 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_45.png')">
+        <div class="caption">
+        </div>
+      </div> 
+
+    </div>
+    <div class="ctrl">
+      <button class="prev">◀</button>
+      <button class="next">▶</button>
+    </div>
+    <div class="dots"></div>
+    <div class="progress"><div class="bar"></div></div>
+  </div>
+</section>
 
 
   <section id="case" class="section">
     <h2><span class="spark">Case Studies</span></h2>
     <div class="cs">
-      <div class="frame"></div>
-      <div class="copy">
+      <div class="frame"><img src="./images/CaseStudies/CaseStudies.png" alt="Genshin Impact Case"/></div>
+      <div class="copy">       
         <h3>Genshin Impact — Game Localization Translator</h3>
         <p class="sub">Bringing immersive fantasy worlds to global audiences through precise translation, cultural adaptation, and narrative flow.</p>
         <p class="sub">Role: Dialogue adaptation, in-game text localization, cultural nuance alignment, QA review.</p>
-        <p><a class="btn" href="#">Open Case</a></p>
+        <p><a class="btn" href="casegenshin.html">Open Case</a></p>
       </div>
       <div class="frame"></div>
       <div class="copy">
@@ -685,9 +1103,9 @@
           <li>Values: Precision, play, collaboration</li>
         </ul>
       </div>
-      <div class="stat"><b>50+ </b><div>deliverables shipped</div></div>
+      <div class="stat"><b>333+ </b><div>deliverables shipped</div></div>
       <div class="stat"><b>10</b><div>game prototypes</div></div>
-      <div class="stat"><b>3+</b><div>months creating</div></div>
+      <div class="stat"><b>7+</b><div>months creating</div></div>
     </div>
   </section>
 
@@ -696,8 +1114,8 @@
     <div class="card inline">
       <div class="qr"></div>
       <div>
-        <div style="font-weight:700">arclume@valvesoftware.com</div>
-        <div class="sub">SaiGon City • Available for freelance & collaborations</div>
+        <div style="font-weight:700">arclume.studio@gmail.com</div>
+        <div class="sub">Ho Chi Minh City • Available for freelance & collaborations</div>
         <div class="cta" style="margin-top:8px">
           <a class="btn" href="#">Behance</a>
           <a class="btn" href="#">ArtStation</a>
@@ -706,6 +1124,100 @@
       </div>
     </div>
   </section>
+  
+
+<!-- PROJECTS DÀNH RIÊNG CHO CATALOG (KHÔNG HIỆN Ở FEATURED) -->
+<div id="catalog-data" hidden>
+
+  <!-- Pixel -->
+  <article class="project" data-tags="pixel"
+           data-title="Poorify Quest — Visual Assets"
+           data-gallery="./images/PoorifyQuest/Poorify_1.png, ./images/PoorifyQuest/Poorify_2.png, ./images/PoorifyQuest/Poorify_3.png">
+    <div class="cover" style="background-image:url('./images/PoorifyQuest/Poorify_1.png');"></div>
+    <div class="meta">
+      <h3>Poorify Quest — Visual Assets</h3>
+      <span class="pill">Pixel</span><span class="pill">Animation</span>
+    </div>
+  </article>
+
+  <article class="project" data-tags="pixel"
+           data-title="Chickaboom — Visual Set"
+           data-gallery="./images/Chickaboom/Chickaboom_1.png, ./images/Chickaboom/Chickaboom_2.png">
+    <div class="cover" style="background-image:url('./images/Chickaboom/Chickaboom_1.png');"></div>
+    <div class="meta">
+      <h3>Chickaboom — Visual Set</h3>
+      <span class="pill">Pixel</span><span class="pill">Animation</span>
+    </div>
+  </article>
+
+  <!-- Packaging -->
+  <article class="project" data-tags="packaging"
+           data-title="Commercial Product Design"
+           data-gallery="./images/Catalogue/1P-Wine.png, ./images/Catalogue/1P-Wine_1.png, ./images/Catalogue/2P-Chocolate.png, ./images/Catalogue/2P-Chocolate_1.png, ./images/Catalogue/3P-Milk.png, ./images/Catalogue/3P-Milk_1.png, ./images/Catalogue/4P-Juice.png, ./images/Catalogue/4P-Juice_1.png, ./images/Catalogue/5P-Essence.png, ./images/Catalogue/5P-Essence_1.png">
+    <div class="cover" style="background-image:url('./images/Catalogue/ThemeLNE.png');"></div>
+    <div class="meta">
+      <h3>Commercial Product Design</h3>
+      <span class="pill">Packaging</span><span class="pill">Brand</span>
+    </div>
+  </article>
+
+  <!-- Brand -->
+  <article class="project" data-tags="brand"
+           data-title="Logo &amp; Mark"
+           data-gallery="./images/Catalogue/1P-Wine.png, ./images/Catalogue/1P-Wine_1.png, ./images/Catalogue/2P-Chocolate.png, ./images/Catalogue/2P-Chocolate_1.png, ./images/Catalogue/3P-Milk.png, ./images/Catalogue/3P-Milk_1.png, ./images/Catalogue/4P-Juice.png, ./images/Catalogue/4P-Juice_1.png, ./images/Catalogue/5P-Essence.png, ./images/Catalogue/5P-Essence_1.png">
+    <div class="cover" style="background-image:url('./images/Catalogue/ThemeLNE.png');"></div>
+    <div class="meta">
+      <h3>Logo &amp; Mark</h3>
+      <span class="pill">Brand</span><span class="pill">Identity</span>
+    </div>
+  </article>
+
+  <!-- Print & Marketing -->
+  <article class="project" data-tags="print"
+           data-title="GreenNut — Tet Poster Design"
+           data-gallery="./images/Catalogue/PrintMarketing/GPoster.png">
+    <div class="cover" style="background-image:url('./images/Catalogue/PrintMarketing/GPosterTheme-01.png');"></div>
+    <div class="meta">
+      <h3>GreenNut — Tet Poster Design</h3>
+      <span class="pill">Print</span><span class="pill">Marketing</span>
+    </div>
+  </article>
+
+  <article class="project" data-tags="print"
+           data-title="GreenNut &#10;Catalogue &amp; Brochure"
+           data-gallery="./images/Catalogue/PrintMarketing/GCatalogue.png, ./images/Catalogue/PrintMarketing/GBrochure.png">
+    <div class="cover" style="background-image:url('./images/Catalogue/PrintMarketing/GCatalogueTheme-01.png');"></div>
+    <div class="meta">
+      <h3 class="center-title">GreenNut — Catalogue &amp; Brochure</h3>
+      <span class="pill">Print</span><span class="pill">Editorial</span>
+    </div>
+  </article>
+
+  <article class="project" data-tags="print"
+           data-title="GreenNut &#10;Holiday Banner Set"
+           data-gallery="./images/Catalogue/PrintMarketing/GBanner.png">
+    <div class="cover" style="background-image:url('./images/Catalogue/PrintMarketing/GBannerTheme-01.png');"></div>
+    <div class="meta">
+      <h3 class="center-title">GreenNut — Holiday Banner Set</h3>
+      <span class="pill">Digital</span><span class="pill">Marketing</span>
+    </div>
+  </article>
+
+  <article class="project" data-tags="print"
+           data-title="GreenNut — Key Visual"
+           data-gallery="./images/Catalogue/PrintMarketing/GKeyvisual.png">
+    <div class="cover" style="background-image:url('./images/Catalogue/PrintMarketing/GKeyvisual.png');"></div>
+    <div class="meta">
+      <h3>GreenNut — Key Visual</h3>
+      <span class="pill">Key Visual</span><span class="pill">Campaign</span>
+    </div>
+  </article>
+
+</div>
+
+
+
+
 
 <!-- LIGHTBOX STRUCTURE -->
 <div class="lightbox" id="lightbox" aria-modal="true" role="dialog">
@@ -865,6 +1377,59 @@ applyFilter(initTag);
 chips.forEach(c=>c.classList.toggle('active', c.dataset.filter===initTag));
 </script>
 
+
+
+<script>
+(() => {
+  const root = document.querySelector('#campaigns');
+  if (!root) return;
+
+  const slides = root.querySelector('.slides');
+  const slideEls = root.querySelectorAll('.slide');
+  const dotsEl  = root.querySelector('.dots');
+  const bar     = root.querySelector('.progress .bar');
+  const prevBtn = root.querySelector('.prev');
+  const nextBtn = root.querySelector('.next');
+
+  let idx = 0, timer, duration = 5000;
+
+  // tạo dots
+  slideEls.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => go(i));
+    dotsEl.appendChild(d);
+  });
+  const dots = dotsEl.querySelectorAll('.dot');
+
+  function go(i){
+    idx = (i + slideEls.length) % slideEls.length;
+    slides.style.transform = `translateX(-${idx * 100}%)`;
+    dots.forEach((d, j) => d.classList.toggle('active', j === idx));
+    resetTimer();
+  }
+  function next(){ go(idx + 1); }
+  function prev(){ go(idx - 1); }
+
+  function resetTimer(){
+    clearInterval(timer);
+    if (bar) {
+      bar.style.transition = 'none';
+      bar.style.width = '0';
+      requestAnimationFrame(() => {
+        bar.style.transition = `width ${duration}ms linear`;
+        bar.style.width = '100%';
+      });
+    }
+    timer = setInterval(next, duration);
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  resetTimer();
+})();
+</script>
 
 </body>
 </html>

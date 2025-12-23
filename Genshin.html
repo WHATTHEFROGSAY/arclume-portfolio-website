@@ -1,0 +1,390 @@
+# HoYoverse Localization Platform — Concept Architecture (Draft)
+
+> A speculative internal system design for a AAA live-service game like **Genshin Impact**, modeled on industry best practices. Tailor as needed.
+
+---
+
+## 1) Goals & Non‑Goals
+
+**Goals**
+
+* Centralize all **game strings**, **quests**, **UI text**, **VO scripts**, **marketing copy**.
+* End‑to‑end workflow: authoring → translation → review → LQA → integration → live ops.
+* Consistency (glossary/style guide), high velocity (patch trains), and strong QA.
+* Scalable to 20+ locales, millions of strings, and frequent content drops.
+
+**Non‑Goals**
+
+* Not a full DCC for art/audio. Integrates with DCC/CI instead.
+* Not a replacement for version control; complements Git/Perforce.
+
+---
+
+## 2) Personas
+
+* **Content Author** (designers, quest writers)
+* **Loc PM** (schedules, assignments, vendor mgmt)
+* **Translator/Reviewer** (in‑house + vendors)
+* **Terminologist** (glossary governance)
+* **LQA Tester** (in‑context validation)
+* **Build Engineer** (CI/CD integration)
+* **Producer** (dashboards, quality gates)
+
+---
+
+## 3) High‑Level Architecture
+
+```mermaid
+flowchart LR
+  subgraph Authoring
+    W(Quest/Script Tool)
+    U(UI Spec Tool)
+  end
+
+  subgraph Platform Core
+    M[Message Store (DB + KV)]
+    G[Glossary/Termbase]
+    S[Style Guides]
+    C[Content API (GraphQL/REST)]
+    WQ[Workflow Engine]
+    QE[Quality Engine (LQA/Lint)]
+    IE[In‑Editor CAT]
+    PK[Packaging Service]
+    EV[Event Bus]
+    AU[AuthZ/SSO]
+    AD[Audit/History]
+  end
+
+  subgraph Vendor / External
+    VT[Vendor Portal]
+    MT[MT Engine(s)]
+  end
+
+  subgraph Game/Runtime
+    CI[CI/CD]
+    BR[Build Repo (Git/Perforce)]
+    GA[Game Assets]
+    RP[Runtime Patch/Hotfix]
+  end
+
+  W-->C
+  U-->C
+  C<-->M
+  C<-->G
+  C<-->S
+  C<-->IE
+  IE<-->WQ
+  WQ<-->QE
+  QE-->AD
+  C--publish-->PK-->CI
+  CI-->BR-->GA
+  PK-->RP
+  EV<-->C
+  AU-->C
+  VT<-->C
+  MT<-->IE
+```
+
+**Key Ideas**
+
+* **Message Store** stores **source strings** keyed by stable IDs; localized variants per locale.
+* **Workflow Engine** tracks per‑string state across locales.
+* **Quality Engine** runs automated checks (placeholders, width overflow, banned words, ICU syntax, term enforcement).
+* **CAT Editor** is web‑based with TM (translation memory), term highlights, MT suggestions, and in‑game preview.
+* **Packaging Service** exports binary/resource bundles for each platform and patch.
+
+---
+
+## 4) Data Model (Core Entities)
+
+* **Project** → **Component** (e.g., UI, Quests, Items) → **Resource** (file/namespace) → **Entry** (string/segment)
+* **Entry**: `{ id, key, source, context, metadata, variants[] }`
+* **Variant**: `{ locale, text, status, assignee, checks[], notes[] }`
+* **Term**: `{ lemma, pos, definitions, localeEquivalents, forbidden, domain }`
+* **StyleGuide**: per locale; rule sets and examples.
+* **Build**: `{ branch, tag, locales, hash, artifacts }`
+
+**Example Entry (ICU)**
+
+```json
+{
+  "id": "quest.q123.start",
+  "key": "QUEST_START_MSG",
+  "source": "{playerName}, you have {count, plural, one {# new commission} other {# new commissions}} in {region}.",
+  "context": {"region": "Liyue", "speaker": "Katheryne"},
+  "metadata": {"maxWidth": 420, "ui": "dialogLine", "gendered": true},
+  "variants": [
+    {"locale": "en-US", "text": "{playerName}, you have {count, plural, one {# new commission} other {# new commissions}} in {region}.", "status": "approved"},
+    {"locale": "vi-VN", "text": "{playerName}, bạn có {count, plural, one {# nhiệm vụ mới} other {# nhiệm vụ mới}} tại {region}.", "status": "review"}
+  ]
+}
+```
+
+---
+
+## 5) Workflow States & Gates
+
+**Per‑locale Status**: `new → draft → translated → reviewed → approved → locked → shipped`
+
+**Quality Gates**
+
+* **Lint**: ICU validity, placeholders match, forbidden terms, capitalization, double spaces, punctuation locale rules.
+* **Layout**: pixel width estimate, truncation risk, line breaks, CJK rules, ellipsis.
+* **Semantics**: glossary adherence, tone of voice, honorifics, gender/number agreement (where applicable).
+* **Regression**: diff vs previous patch to prevent accidental rewrites.
+
+---
+
+## 6) CAT Editor (In‑Browser)
+
+**Features**
+
+* Side‑by‑side source/target, **TM** matches (100/95/85%), MT suggestion with tags, **term** popovers.
+* **ICU assistant** (chips for plural/gender/select, live validation).
+* **Context panel**: screenshots, speaker, quest graph node, UI component preview, character limits.
+* **Batch ops**: propagate, split/merge segments, regex replace.
+* **Comments** with threads and mention (`@LocPM`, `@Writer`).
+* **Keyboard**: power‑user shortcuts; RTL/LTR toggles.
+
+---
+
+## 7) Terminology & Style Governance
+
+* **Termbase** with domains: combat, artifacts, cooking, locations.
+* **Lifecycle**: propose → review → ratify → version → deprecate.
+* **Enforcement**: hard fail on forbidden terms; soft warn on variants.
+* **Locale style guides**: tone, politeness level, sentence endings, VO lip‑sync constraints.
+
+---
+
+## 8) In‑Context & LQA
+
+* **Preview modes**: UI screenshot overlay; quest playback simulator with branching.
+* **Pseudo‑loc**: length‑expansion, diacritics, RTL mirroring.
+* **LQA runs**: create **issues** linked to entries: `{severity, category, repro, screenshot}`.
+* **String hunt**: scan game logs to discover runtime strings not in the store.
+
+---
+
+## 9) Build/Release Integration
+
+* **Pull**: CI imports updated source strings from repo (JSON, PO, CSV, XLIFF, or proprietary).
+* **Push**: Packaging Service exports signed locale bundles per platform (PC/PS/iOS/Android), with checksum & manifest.
+* **Branching**: `main`, `release/X.Y`, `hotfix/*`; locale freeze windows.
+* **Feature flags** for partial rollouts; **A/B** text experiments.
+
+---
+
+## 10) APIs & Webhooks
+
+**GraphQL/REST** examples
+
+* `GET /projects/{id}/entries?locale=vi-VN&status=translated`
+* `PATCH /entries/{id}/variants/vi-VN` body: `{ text, status, notes }`
+* `POST /glossary/terms` body: `{ lemma, forbidden, locales: { vi-VN: "Nguyên Thần" } }`
+
+**Webhooks**
+
+* `event.entry.updated` → CI re‑package if status crosses `approved`.
+* `event.term.changed` → invalidate caches, rerun lint.
+* `event.build.shipped` → lock variants.
+
+---
+
+## 11) Security, Roles, Audit
+
+* **SSO** (Okta/AD), **RBAC** roles: Author, Translator, Reviewer, Terminologist, LQA, PM, Admin.
+* **Row‑level** permissions for vendor domains; masked PII (player names in examples).
+* **Audit log** per field with diff & revert; legal holds.
+
+---
+
+## 12) Metrics & Observability
+
+* Throughput (segments/day), lead time per locale, on‑time %.
+* Quality: LQA issue density, MTPE edit distance, term violation rate.
+* Stability: crash‑free previews, API p95 latency, packaging duration.
+
+---
+
+## 13) Example Schemas
+
+**PostgreSQL (simplified)**
+
+```sql
+CREATE TABLE entries (
+  id TEXT PRIMARY KEY,
+  project TEXT NOT NULL,
+  key TEXT NOT NULL,
+  source TEXT NOT NULL,
+  context JSONB,
+  metadata JSONB,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE variants (
+  entry_id TEXT REFERENCES entries(id) ON DELETE CASCADE,
+  locale TEXT NOT NULL,
+  text TEXT NOT NULL,
+  status TEXT NOT NULL,
+  assignee TEXT,
+  checks JSONB DEFAULT '[]',
+  notes JSONB DEFAULT '[]',
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  PRIMARY KEY (entry_id, locale)
+);
+
+CREATE TABLE terms (
+  id SERIAL PRIMARY KEY,
+  lemma TEXT NOT NULL,
+  domain TEXT,
+  forbidden BOOLEAN DEFAULT false,
+  data JSONB
+);
+```
+
+**Export Bundle Manifest**
+
+```json
+{
+  "project": "genshin",
+  "component": "ui",
+  "locale": "vi-VN",
+  "build": "4.9.1",
+  "hash": "a1b2c3",
+  "entries": [
+    {"id":"ui.menu.play","text":"Chơi"},
+    {"id":"ui.menu.settings","text":"Cài đặt"}
+  ]
+}
+```
+
+---
+
+## 14) ICU, Plural, Gender, Select
+
+**Gendered speaker**
+
+```icu
+{speakerGender, select,
+  male {{name} đã sẵn sàng.}
+  female {{name} đã sẵn sàng.}
+  other {{name} đã sẵn sàng.}
+}
+```
+
+**Plural**
+
+```icu
+Bạn nhận được {count, plural,
+  =0 {không có vật phẩm nào}
+  one {# vật phẩm}
+  other {# vật phẩm}
+}.
+```
+
+---
+
+## 15) Vendor Collaboration
+
+* **Vendor portal** scoped to assigned locales/components.
+* **Secure file bridge** (XLIFF 1.2/2.0, CSV) for offline translators; checksum verify on import.
+* **Anonymized context** when needed; watermarked previews.
+
+---
+
+## 16) VO / Subtitle Pipeline (Optional)
+
+* **Script extraction** with timestamps and speaker tags.
+* **Subtitle editor** supporting CPS (chars/sec) and line breaks.
+* **Recording package** (studio cue sheets) auto‑generated; change‑tracking per line.
+* **Back‑sync**: studio deliveries → QC → bundle.
+
+---
+
+## 17) Typical Day‑2‑Day Flow
+
+1. Writer adds quest lines in Authoring → **Content API** ingests.
+2. New entries auto‑routed to locales via **Workflow Engine**.
+3. Translators use **CAT Editor** with TM+MT; checks run.
+4. Reviewers approve; **Quality Engine** passes gates.
+5. **Packaging Service** exports locale bundles.
+6. **CI** bakes into builds; **Runtime Patch** updates live.
+7. **LQA** logs issues; feedback loops to entries.
+
+---
+
+## 18) Risk Controls
+
+* String freeze with exception policy.
+* Backport hotfix lane with cherry‑pick.
+* Shadow staging for locale smoke tests.
+* Kill‑switch for bad bundles.
+
+---
+
+## 19) Roadmap (Speculative)
+
+* **Neural TM** scoring; context‑aware suggestions.
+* **In‑game A/B** text experiments.
+* **Auto screenshot match** (CV) for UI references.
+* **LLM‑assisted** placeholder/gender checks and rephrasing under style constraints.
+
+---
+
+## 20) Visual UI Wireframe (Quick Sketch)
+
+* **Left**: navigation (Projects → Components → Resources → Entries)
+* **Center**: editor pane (source/top, target/bottom) with ICU helper.
+* **Right**: context tabs (Screenshot • Termbase • Style • Checks • Comments • History)
+* **Top bar**: search, locale switcher, status filter, batch ops, export.
+
+---
+
+### Appendix — Example Checks (Quality Engine)
+
+* Placeholder mismatch: `{player}` vs `{playerName}`
+* Term enforcement: “**Origin**” must map to “**Nguyên Thần**” (example)
+* Max width: est. 480px > limit 420px (warn)
+* Banned punctuation: space before comma (vi‑VN rule)
+* ICU: missing `other` branch in `plural`
+* Risky homographs flagged by locale (e.g., “miễn phí” vs “free-of-charge” tone)
+
+---
+
+**End of Draft** — Tell me what you want to change first: data model, editor UX, or CI packaging?
+
+
+┌──────────────────────────────────────────────────────┐
+│  Project: Genshin Impact — Patch 5.0                 │
+│  File: quests/mainquest_chapter6.txt                 │
+│  Segment: 152 / 984                                  │
+├──────────────────────────────────────────────────────┤
+│ Source (English):                                    │
+│ "Traveler, are you ready to face the storm ahead?"   │
+│                                                      │
+│ Translation (Tiếng Việt):                            │
+│ [  Người lữ khách, cậu đã sẵn sàng đối mặt với cơn   │
+│    bão phía trước chưa? ]                            │
+│                                                      │
+│ Notes:                                               │
+│ - Keep tone respectful, slightly formal              │
+│ - "Storm" here is metaphorical (not weather)         │
+├──────────────────────────────────────────────────────┤
+│  Translation Memory (TM):                            │
+│  • "Traveler" → "Người lữ khách" (consistent term)   │
+│  • "Face the storm" → "Đối mặt với cơn bão"          │
+│                                                      │
+│  Termbase (TB):                                      │
+│  • "Traveler" → Người lữ khách                       │
+│  • "Paimon" → Paimon (giữ nguyên)                    │
+│  • "Vision" → Thần Nhãn                              │
+├──────────────────────────────────────────────────────┤
+│  Context Preview:                                    │
+│  [ Character portrait: Lumine speaking ]             │
+│  [ Scene: Stormy cliff background ]                  │
+├──────────────────────────────────────────────────────┤
+│  Workflow Buttons:                                   │
+│  [ Save ] [ Suggest ] [ Comment ] [ Submit for LQA ] │
+└──────────────────────────────────────────────────────┘
