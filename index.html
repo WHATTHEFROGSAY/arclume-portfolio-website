@@ -1366,6 +1366,575 @@
       .catalog-item:hover .catalog-thumb {
          transform: scale(1.05)
       }
+
+.system-visual {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+
+.step {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp .6s ease forwards;
+}
+
+.step-inner {
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.1);
+  text-align: center;
+  background: linear-gradient(135deg, rgba(0,231,255,.08), rgba(255,77,255,.08));
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+
+.step:nth-child(1) { animation-delay: .1s; }
+.step:nth-child(2) { animation-delay: .2s; }
+.step:nth-child(3) { animation-delay: .3s; }
+.step:nth-child(4) { animation-delay: .4s; }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step p {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.step:hover .step-inner {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(0,231,255,.22);
+  border-color: rgba(0,231,255,.35);
+}
+
+.step-detail {
+  display: none;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.1);
+  background: linear-gradient(135deg, rgba(0,231,255,.08), rgba(255,77,255,.06));
+}
+
+.process-visual-panel {
+  margin-top: 22px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(0,231,255,.07), rgba(255,77,255,.06));
+  overflow: hidden;
+  min-height: 260px;
+  position: relative;
+}
+
+.pv-stage {
+  display: none;
+  grid-template-columns: 1.15fr .85fr;
+  min-height: 260px;
+}
+
+.pv-stage.active {
+  display: grid;
+}
+
+.pv-left,
+.pv-right {
+  padding: 24px;
+}
+
+.pv-left {
+  position: relative;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+
+.pv-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pv-right h3 {
+  margin: 0 0 10px;
+  font-size: 28px;
+}
+
+.pv-summary {
+  margin: 0 0 16px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.pv-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pv-tags span {
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--muted);
+  background: rgba(0,0,0,.18);
+}
+
+/* DISCOVER */
+.pv-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 32px;
+}
+
+.pv-box {
+  min-height: 110px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-line {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 24px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,231,255,.9), transparent);
+  animation: scanMove 2.6s linear infinite;
+}
+
+.discover-grid {
+  position: relative;
+  align-items: stretch;
+}
+
+.discover-box {
+  min-height: 122px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255,255,255,.025);
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease, background .35s ease;
+}
+
+.discover-box .pv-index {
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: rgba(255,255,255,.55);
+}
+
+.discover-box .pv-label {
+  font-size: 15px;
+  color: #fff;
+}
+
+.discover-box .pv-sub {
+  font-size: 11px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: .8;
+}
+
+.pv-outcome {
+  margin: 18px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.pv-outcome b {
+  color: #fff;
+}
+
+/* active pulse luân phiên cho 3 box */
+.box-a { animation: focusScan 3.6s infinite; }
+.box-b { animation: focusScan 3.6s infinite; animation-delay: 1.2s; }
+.box-c { animation: focusScan 3.6s infinite; animation-delay: 2.4s; }
+
+@keyframes focusScan {
+  0%, 100% {
+    opacity: .5;
+    filter: blur(0.3px);
+    border-color: rgba(255,255,255,.12);
+    box-shadow: none;
+    transform: scale(1);
+  }
+
+  20% {
+    opacity: 1;
+    filter: blur(0);
+    border-color: rgba(0,231,255,.5);
+    box-shadow: 0 0 28px rgba(0,231,255,.25);
+    transform: scale(1.03);
+  }
+
+  40% {
+    opacity: .5;
+    filter: blur(0.3px);
+    border-color: rgba(255,255,255,.12);
+    box-shadow: none;
+    transform: scale(1);
+  }
+}
+
+.discover-box {
+  min-height: 122px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  background: rgba(255,255,255,.025);
+
+  opacity: .5;
+  filter: blur(0.3px);
+
+  transition: all .3s ease;
+}
+
+/* DEFINE */
+.define-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  height: 100%;
+}
+
+.define-node {
+  min-width: 110px;
+  min-height: 110px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.14);
+  background: radial-gradient(circle at center, rgba(0,231,255,.14), rgba(255,77,255,.06));
+  box-shadow: 0 0 24px rgba(0,231,255,.08);
+}
+
+.define-link {
+  width: 70px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0,231,255,.3), rgba(255,77,255,.3));
+  position: relative;
+}
+
+.define-link::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,231,255,.9);
+  box-shadow: 0 0 18px rgba(0,231,255,.8);
+  animation: dataFlow 1.8s linear infinite;
+}
+
+
+/* BUILD */
+.build-assembly {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.build-part,
+.build-result {
+  min-height: 90px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+    animation: buildGlow 2.2s ease-in-out infinite;
+}
+
+@keyframes buildGlow {
+  0%, 100% { box-shadow: 0 0 16px rgba(0,231,255,.12); }
+  50% { box-shadow: 0 0 32px rgba(0,231,255,.25); }
+}
+
+
+.build-part {
+  animation: buildPop 2.2s ease-in-out infinite;
+}
+
+.build-part:nth-child(2) { animation-delay: .15s; }
+.build-part:nth-child(3) { animation-delay: .3s; }
+.build-part:nth-child(4) { animation-delay: .45s; }
+
+.build-result {
+  min-height: 110px;
+  background: linear-gradient(135deg, rgba(0,231,255,.12), rgba(255,77,255,.08));
+  box-shadow: 0 0 24px rgba(0,231,255,.12);
+}
+
+/* REFINE */
+.refine-compare {
+  height: 180px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.refine-before,
+.refine-after {
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  letter-spacing: .04em;
+}
+
+.refine-before {
+  background: rgba(255,255,255,.04);
+  filter: blur(1px) brightness(.8);
+}
+
+.refine-after {
+  background: linear-gradient(135deg, rgba(0,231,255,.14), rgba(255,77,255,.08));
+}
+
+.refine-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  background: linear-gradient(180deg, var(--cyan), var(--mag));
+  box-shadow: 0 0 18px rgba(0,231,255,.6);
+  animation: compareShift 2.4s ease-in-out infinite alternate;
+}
+
+.step.is-active .step-inner {
+  border-color: rgba(0,231,255,.45);
+  box-shadow: 0 0 30px rgba(0,231,255,.16);
+  transform: translateY(-6px) scale(1.03);
+}
+
+@keyframes scanMove {
+  0% { transform: translateY(0); opacity: .2; }
+  50% { transform: translateY(125px); opacity: 1; }
+  100% { transform: translateY(0); opacity: .2; }
+}
+
+@keyframes dataFlow {
+  0% { left: 0; opacity: 0; }
+  15% { opacity: 1; }
+  100% { left: calc(100% - 18px); opacity: 0; }
+}
+
+@keyframes buildPop {
+  0%, 100% { transform: translateY(0); box-shadow: none; }
+  50% { transform: translateY(-6px); box-shadow: 0 10px 18px rgba(0,231,255,.12); }
+}
+
+@keyframes compareShift {
+  0% { left: 42%; }
+  100% { left: 58%; }
+}
+
+@media (max-width: 900px) {
+  .pv-stage {
+    grid-template-columns: 1fr;
+  }
+
+  .pv-left {
+    border-right: 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+
+  .pv-grid,
+  .build-assembly {
+    grid-template-columns: 1fr;
+  }
+
+  .define-line {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .define-link {
+    width: 2px;
+    height: 44px;
+  }
+
+  .define-link::after {
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    animation: dataFlowVertical 1.8s linear infinite;
+  }
+
+  @keyframes dataFlowVertical {
+    0% { top: 0; opacity: 0; }
+    15% { opacity: 1; }
+    100% { top: calc(100% - 18px); opacity: 0; }
+  }
+}
+
+.reel-section {
+  margin-top: 10px;
+}
+
+.reel-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 360px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0,231,255,.16), transparent 32%),
+    radial-gradient(circle at 80% 70%, rgba(255,77,255,.14), transparent 34%),
+    linear-gradient(135deg, #0e0f17, #171a2c);
+  box-shadow: 0 24px 70px rgba(0,0,0,.45);
+}
+
+.reel-stage {
+  position: relative;
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  padding: 36px;
+}
+
+.reel-scene {
+  position: absolute;
+  max-width: 760px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px) scale(.96);
+  transition: opacity .8s ease, transform .8s ease;
+  z-index: 3;
+}
+
+.reel-scene.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.reel-kicker {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: var(--lime);
+  letter-spacing: .16em;
+  font-size: 12px;
+}
+
+.reel-scene h2 {
+  margin: 0 0 12px;
+  font-size: clamp(30px, 5vw, 64px);
+  line-height: 1;
+  background: linear-gradient(90deg, var(--cyan), var(--mag));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.reel-scene p {
+  margin: 0 auto;
+  max-width: 560px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.reel-orbit {
+  position: absolute;
+  border: 1px solid rgba(0,231,255,.18);
+  border-radius: 999px;
+  z-index: 1;
+}
+
+.o1 {
+  width: 520px;
+  height: 520px;
+  animation: reelOrbit 33s linear infinite;
+}
+
+.o2 {
+  width: 340px;
+  height: 340px;
+  border-color: rgba(255,77,255,.18);
+  animation: reelOrbitReverse 22s linear infinite;
+}
+
+.reel-core {
+  position: absolute;
+  width: 170px;
+  height: 170px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(0,231,255,.12), rgba(255,77,255,.1));
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 0 42px rgba(0,231,255,.18);
+  animation: reelCore 6s ease-in-out infinite;
+  z-index: 1;
+}
+
+.reel-progress {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 20px;
+  height: 3px;
+  background: rgba(255,255,255,.1);
+  border-radius: 999px;
+  overflow: hidden;
+  z-index: 4;
+}
+
+.reel-progress span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--cyan), var(--mag));
+  animation: reelProgress 33s linear infinite;
+}
+
+@keyframes reelOrbit {
+  from { transform: rotate(0deg) scale(1); }
+  to { transform: rotate(360deg) scale(1.08); }
+}
+
+@keyframes reelOrbitReverse {
+  from { transform: rotate(360deg) scale(1.05); }
+  to { transform: rotate(0deg) scale(.95); }
+}
+
+@keyframes reelCore {
+  0%, 100% {
+    transform: rotate(-4deg) scale(.96);
+    opacity: .45;
+  }
+  50% {
+    transform: rotate(4deg) scale(1.08);
+    opacity: .85;
+  }
+}
+
+@keyframes reelProgress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
    </style>
 </head>
 <body class="bg-grid">
@@ -1400,7 +1969,6 @@
     </div>
     <div class="card showcase">
       <div class="marquee animate">
-              <div class="marquee animate">
         <div class="thumb" style="background-image:url('./images/DungeonKnight/justtest.png');"></div>
         <div class="thumb" style="background-image:url('./images/DungeonKnight/enemy21.png');"></div>
         <div class="thumb" style="background-image:url('./images/DungeonKnight/ARCLUME_LOGO.png');"></div>
@@ -1415,6 +1983,194 @@
   </section>
 
   <section id="work" class="section">
+   <section id="system-reel" class="section reel-section">
+  <div class="reel-card">
+    <div class="reel-stage">
+      <div class="reel-scene active" data-scene="0">
+        <span class="reel-kicker">SIGNAL</span>
+        <h2>ARCLUME</h2>
+        <p>From Scattered Signals to a Clear Creative system</p>
+      </div>
+
+      <div class="reel-scene" data-scene="1">
+        <span class="reel-kicker">WORLDBUILDING</span>
+        <h2>Immersive Worlds</h2>
+        <p>Pixel fragments, visual rules AND story-driven environments</p>
+      </div>
+
+      <div class="reel-scene" data-scene="2">
+        <span class="reel-kicker">GAME SYSTEM</span>
+        <h2>UI & Gameplay Logic</h2>
+        <p>HUD, cards, icons AND systems assembled for interaction</p>
+      </div>
+
+      <div class="reel-scene" data-scene="3">
+        <span class="reel-kicker">BRAND SYSTEM</span>
+        <h2>Bold Identities</h2>
+        <p>Logo, palette, layout AND packaging locked into structure.</p>
+      </div>
+
+      <div class="reel-scene" data-scene="4">
+        <span class="reel-kicker">FINAL LOCKUP</span>
+        <h2>Crafting immersive worlds and bold identities.</h2>
+        <p>ARCLUME - visual systems for games, brands AND stories</p>
+      </div>
+
+      <div class="reel-orbit o1"></div>
+      <div class="reel-orbit o2"></div>
+      <div class="reel-core"></div>
+    </div>
+
+    <div class="reel-progress">
+      <span></span>
+    </div>
+  </div>
+</section>
+
+<div class="system-visual">
+
+<div class="step" data-step="discover">
+  <div class="step-inner">
+    <b>01</b><br>DISCOVER
+    <p class="sub">Analyze context. Define clear visual direction.</p>
+  </div>
+</div>
+
+  <div class="step" data-step="define">
+     <div class="step-inner">
+    <b>02</b><br>DEFINE
+    <p class="sub">
+      Build the visual direction color system, style rules & UI structure.    
+    </p>
+    </div>
+  </div>
+
+  <div class="step" data-step="build">
+        <div class="step-inner">
+    <b>03</b><br>BUILD
+    <p class="sub">
+      Create assets, UI elements & visual systems ready for real production.
+    </p>
+    </div>
+  </div>
+
+  <div class="step" data-step="refine">
+         <div class="step-inner">
+    <b>04</b><br>REFINE
+    <p class="sub">
+      Polish details, improve consistency, optimize for clarity & performance.
+    </p>
+   </div>
+  </div>
+</div>
+
+
+<div class="pv-stage discover active" data-panel="discover">
+  <div class="pv-left">
+    <div class="scan-line"></div>
+
+    <div class="pv-grid discover-grid">
+      <div class="pv-box discover-box box-a">
+        <span class="pv-index">01</span>
+        <span class="pv-label">Audience</span>
+        <span class="pv-sub">users</span>
+      </div>
+
+      <div class="pv-box discover-box box-b">
+        <span class="pv-index">02</span>
+        <span class="pv-label">Brand</span>
+        <span class="pv-sub">identity</span>
+      </div>
+
+      <div class="pv-box discover-box box-c">
+        <span class="pv-index">03</span>
+        <span class="pv-label">Constraints</span>
+        <span class="pv-sub">limits</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pv-right">
+    <h3>Discover</h3>
+    <p class="pv-summary">Scan context before defining visual direction.</p>
+
+    <div class="pv-tags">
+      <span>Audience insight </span>
+      <span>Reference direction</span>
+      <span>Production constraints</span>
+    </div>
+
+    <p class="pv-outcome">
+      <b>Outcome:</b> Clear direction that guides all production.
+    </p>
+  </div>
+</div>
+
+  <div class="pv-stage define" data-panel="define">
+    <div class="pv-left">
+      <div class="define-line">
+        <div class="define-node">Color</div>
+        <div class="define-link"></div>
+        <div class="define-node">Type</div>
+        <div class="define-link"></div>
+        <div class="define-node">UI Grid</div>
+      </div>
+    </div>
+    <div class="pv-right">
+      <h3>Define</h3>
+      <p class="pv-summary">Turn references into a clear visual system.</p>
+      <div class="pv-tags">
+        <span>Palette rules</span>
+        <span>Structure</span>
+        <span>Style guide</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pv-stage build" data-panel="build">
+    <div class="pv-left">
+      <div class="build-assembly">
+        <div class="build-part">Icon</div>
+        <div class="build-part">Card</div>
+        <div class="build-part">Frame</div>
+        <div class="build-part">FX</div>
+      </div>
+      <div class="build-result">Final Output</div>
+    </div>
+    <div class="pv-right">
+      <h3>Build</h3>
+      <p class="pv-summary">Turn visual parts into production-ready systems.</p>
+      <div class="pv-tags">
+        <span>Assets</span>
+        <span>UI components</span>
+        <span>Production systems</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pv-stage refine" data-panel="refine">
+    <div class="pv-left">
+      <div class="refine-compare">
+        <div class="refine-before">Before</div>
+        <div class="refine-divider"></div>
+        <div class="refine-after">After</div>
+      </div>
+    </div>
+    <div class="pv-right">
+      <h3>Refine</h3>
+      <p class="pv-summary">Improve clarity, consistency, and final polish.</p>
+      <div class="pv-tags">
+        <span>Readability</span>
+        <span>Consistency</span>
+        <span>Polish</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
     <h2><span class="spark">Featured Work</span></h2>
     <div class="filters">
       <button class="chip active" data-filter="all">All</button>
@@ -1444,7 +2200,7 @@
       </article>
 
       <!-- Packaging project -->
-      <article class="project" data-tags="pixel" data-tags="packaging brand">
+      <article class="project" data-tags="pixel packaging brand">
         <div class="cover" style="background-image:url('./images/DungeonKnight/justtest.png');"></div>
         <div class="meta">
           <h3>Poorify Quest — Visuals</h3>
@@ -1495,23 +2251,25 @@
 
 <!-- CATALOG with animated reveal -->
 <section id="catalog" class="section">
-<h2><span class="spark">Catalog</span> — Quick Jump</h2>
-<div class="catalog">
-<nav class="toc" aria-label="Catalog navigation">
-<h3>Categories</h3>
-<a href="#" data-target="pixel" class="active">Pixel Art</a>
-<a href="#" data-target="ui">Game UI</a>
-<a href="#" data-target="packaging">Packaging</a>
-<a href="#" data-target="brand">Brand</a>
-<a href="#" data-target="print">Print & Marketing</a>
-<a href="#" data-target="all">All</a>
-</nav>
-<div class="card" id="catalog-show" style="padding:16px;min-height:280px;display:grid;place-items:center;text-align:center">
-<div>
-<div style="font-size:20px;margin-bottom:8px">Choose a category to preview</div>
-<div class="sub">An animated showcase will appear here and the grid will filter below.</div>
-</div>
-</div>
+  <h2><span class="spark">Catalog</span> — Quick Jump</h2>
+  <div class="catalog">
+    <nav class="toc" aria-label="Catalog navigation">
+      <h3>Categories</h3>
+      <a href="#" data-target="pixel" class="active">Pixel Art</a>
+      <a href="#" data-target="ui">Game UI</a>
+      <a href="#" data-target="packaging">Packaging</a>
+      <a href="#" data-target="brand">Brand</a>
+      <a href="#" data-target="print">Print & Marketing</a>
+      <a href="#" data-target="all">All</a>
+    </nav>
+
+    <div class="card" id="catalog-show" style="padding:16px;min-height:280px;display:grid;place-items:center;text-align:center">
+      <div>
+        <div style="font-size:20px;margin-bottom:8px">Choose a category to preview</div>
+        <div class="sub">An animated showcase will appear here and the grid will filter below.</div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!--CAMPAIGN SLIDES-->  
@@ -1781,6 +2539,23 @@
     </div>
   </section>
 
+  <section class="section">
+
+  <h2>Process</h2>
+
+   
+
+
+
+
+
+  <div class="card" style="padding:16px 20px; display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between;">
+    <div><b>Focus:</b> Game visuals • UI systems • Brand identity</div>
+    <div><b>Tools:</b> Aseprite • Photoshop • Illustrator • Figma</div>
+    <div><b>Output:</b> 333+ deliverables shipped</div>
+  </div>
+</section>
+
   <section id="about" class="section">
     <h2><span class="spark">About & Skills</span></h2>
     <div class="about">
@@ -1954,7 +2729,7 @@ window.addEventListener('keydown',e=>{
   if(!lb.classList.contains('open')) return;
   if(e.key==='Escape') closeLB();
   if(e.key==='ArrowRight') nextBtn.click();
-  if(e.key==='ArrowLeft') nextBtn.click();
+  if(e.key==='ArrowLeft') prevBtn.click();
 });
 
 // ====== HELPERS ======
@@ -2115,6 +2890,58 @@ chips.forEach(c=>c.classList.toggle('active', c.dataset.filter===initTag));
 
   resetTimer();
 })();
+
+document.querySelectorAll('.step[data-step]').forEach(step => {
+  step.addEventListener('click', () => {
+    const id = step.dataset.step;
+    const target = document.getElementById(id + '-detail');
+
+    document.querySelectorAll('.step-detail').forEach(detail => {
+      detail.style.display = 'none';
+    });
+
+    if (target) {
+      target.style.display = 'block';
+    }
+  });
+});
+
+document.querySelectorAll('.step[data-step]').forEach(step => {
+  step.addEventListener('click', () => {
+    const id = step.dataset.step;
+
+    document.querySelectorAll('.step').forEach(item => {
+      item.classList.remove('is-active');
+    });
+    step.classList.add('is-active');
+
+    document.querySelectorAll('.pv-stage').forEach(panel => {
+      panel.classList.remove('active');
+    });
+
+    const target = document.querySelector(`.pv-stage[data-panel="${id}"]`);
+    if (target) target.classList.add('active');
+  });
+});
+
+const reelScenes = document.querySelectorAll('.reel-scene');
+let reelIndex = 0;
+
+function playSystemReel() {
+  reelScenes.forEach(scene => scene.classList.remove('active'));
+
+  if (reelScenes[reelIndex]) {
+    reelScenes[reelIndex].classList.add('active');
+  }
+
+  reelIndex = (reelIndex + 1) % reelScenes.length;
+}
+
+if (reelScenes.length) {
+  playSystemReel();
+  setInterval(playSystemReel, 6600);
+}
+
 </script>
 
 </body>
