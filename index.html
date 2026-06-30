@@ -413,10 +413,26 @@
          margin: 0 0 14px
       }
 
+      .campaign-set-title {
+         margin: 22px 0 10px;
+         color: var(--txt);
+         font-size: 16px;
+         letter-spacing: .04em;
+      }
+
+      .campaign-set-title span {
+         color: var(--cyan)
+      }
+
       @media (max-width: 480px) {
          #campaigns h2 {
             font-size: 18px;
             margin: 0 0 12px
+         }
+
+         .campaign-set-title {
+            font-size: 14px;
+            margin: 18px 0 8px
          }
       }
 
@@ -429,10 +445,22 @@
          box-shadow: 0 20px 60px rgba(0, 0, 0, .45)
       }
 
+      .slider.contain-slides .slide {
+         aspect-ratio: 16/8.5;
+         background-size: contain;
+         background-position: center center;
+         background-repeat: no-repeat;
+         background-color: #07080d;
+      }
+
       @media (max-width: 768px) {
          .slider {
             border-radius: 16px;
             box-shadow: 0 12px 40px rgba(0, 0, 0, .35)
+         }
+
+         .slider.contain-slides .slide {
+            aspect-ratio: 16/10;
          }
       }
 
@@ -440,6 +468,10 @@
          .slider {
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, .3)
+         }
+
+         .slider.contain-slides .slide {
+            aspect-ratio: 4/3;
          }
       }
 
@@ -590,6 +622,7 @@
       .dot {
          width: 10px;
          height: 10px;
+         padding: 0;
          border-radius: 50%;
          border: 1px solid rgba(255, 255, 255, .6);
          background: rgba(255, 255, 255, .2);
@@ -1283,10 +1316,6 @@
          border: 1px solid rgba(255, 255, 255, .14)
       }
 
-      @keyframes fade {
-         from { opacity: 0; transform: translateY(10px); }
-         to { opacity: 1; transform: translateY(0); }
-      }
 
       /* Catalog grid */
       .catalog-grid {
@@ -1373,7 +1402,6 @@
   gap: 16px;
 }
 
-
 .step {
   opacity: 0;
   transform: translateY(20px);
@@ -1411,25 +1439,6 @@
   transform: translateY(-6px) scale(1.03);
   box-shadow: 0 12px 30px rgba(0,231,255,.22);
   border-color: rgba(0,231,255,.35);
-}
-
-.step-detail {
-  display: none;
-  margin-top: 20px;
-  padding: 20px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.1);
-  background: linear-gradient(135deg, rgba(0,231,255,.08), rgba(255,77,255,.06));
-}
-
-.process-visual-panel {
-  margin-top: 22px;
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(0,231,255,.07), rgba(255,77,255,.06));
-  overflow: hidden;
-  min-height: 260px;
-  position: relative;
 }
 
 .pv-stage {
@@ -1864,17 +1873,128 @@
   z-index: 1;
 }
 
+/* Audio-reactive ripple mode */
+.reel-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%) scale(.5);
+
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.reel-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 180px;
+  height: 180px;
+
+  transform: translate(-50%, -50%) rotate(-6deg);
+
+  border-radius: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,231,255,.08),
+      rgba(51,120,255,.05),
+      rgba(255,77,255,.08)
+    );
+
+  border: 1px solid rgba(255,255,255,.06);
+
+  box-shadow:
+    inset 0 0 24px rgba(0,231,255,.08),
+    0 0 36px rgba(0,231,255,.08);
+
+  z-index: 3;
+}
+
+.reel-progress span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--cyan), var(--mag));
+  animation: reelProgress 33s linear infinite;
+}
+
+#system-reel.audio-active .reel-orbit,
+#system-reel.audio-active .reel-core,
+#system-reel.audio-active .reel-progress span {
+  animation-play-state: running;
+}
+
+#system-reel.audio-active .o1 {
+  animation: audioRipple 2.8s ease-out infinite;
+}
+
+#system-reel.audio-active .o2 {
+  animation: audioRipple 2.8s ease-out infinite .55s;
+}
+
+#system-reel.audio-active .reel-core {
+  animation: audioCore 1.4s ease-in-out infinite;
+}
+
+@keyframes audioRipple {
+  0% {
+    transform: translate(-50%, -50%) scale(.35);
+    opacity: .95;
+    filter: blur(0);
+  }
+
+  45% {
+    opacity: .75;
+  }
+
+  75% {
+    opacity: .28;
+    filter: blur(2px);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+    filter: blur(5px);
+  }
+}
+
+@keyframes audioCore {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(.94) rotate(-6deg);
+    opacity: .5;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.12) rotate(4deg);
+    opacity: .95;
+  }
+}
+
 .o1 {
-  width: 520px;
-  height: 520px;
-  animation: reelOrbit 33s linear infinite;
+  width: 220px;
+  height: 220px;
+
+  border: 2px solid rgba(0,231,255,.55);
+
+  box-shadow:
+    0 0 24px rgba(0,231,255,.35),
+    inset 0 0 24px rgba(0,231,255,.12);
 }
 
 .o2 {
-  width: 340px;
-  height: 340px;
-  border-color: rgba(255,77,255,.18);
-  animation: reelOrbitReverse 22s linear infinite;
+  width: 360px;
+  height: 360px;
+
+  border: 2px solid rgba(255,77,255,.38);
+
+  box-shadow:
+    0 0 32px rgba(255,77,255,.22),
+    inset 0 0 28px rgba(255,77,255,.08);
 }
 
 .reel-core {
@@ -1893,12 +2013,133 @@
   position: absolute;
   left: 24px;
   right: 24px;
-  bottom: 20px;
-  height: 3px;
-  background: rgba(255,255,255,.1);
+  bottom: 18px;
+  height: 56px;
+  z-index: 8;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  background: transparent;
+  overflow: visible;
+}
+
+.beat-bars {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+}
+
+.beat-bars span {
+  flex: 1;
+  height: 4px;
   border-radius: 999px;
-  overflow: hidden;
-  z-index: 4;
+
+  background: linear-gradient(
+    180deg,
+    #00E7FF,
+    #3378FF,
+    #FF4DFF
+  );
+
+  box-shadow:
+    0 0 12px rgba(0,231,255,.55),
+    0 0 24px rgba(255,77,255,.2);
+
+  opacity: .35;
+  transform-origin: bottom;
+}
+
+/* chỉ chạy khi nhạc bật */
+#system-reel.audio-active .beat-bars span {
+  animation: beatBar .75s ease-in-out infinite;
+}
+
+#system-reel.audio-active .beat-bars span:nth-child(2n) {
+  animation-delay: .12s;
+}
+
+#system-reel.audio-active .beat-bars span:nth-child(3n) {
+  animation-delay: .24s;
+}
+
+#system-reel.audio-active .beat-bars span:nth-child(4n) {
+  animation-delay: .36s;
+}
+
+#system-reel.audio-active .beat-bars span:nth-child(5n) {
+  animation-delay: .48s;
+}
+
+.beat-dot {
+  position: absolute;
+  left: 0;
+  bottom: 38px;
+
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+
+  background: radial-gradient(circle, #fff 0%, #00E7FF 38%, #3378FF 70%, #FF4DFF 100%);
+
+  box-shadow:
+    0 0 18px rgba(0,231,255,.9),
+    0 0 38px rgba(255,77,255,.35);
+
+  opacity: 0;
+}
+
+#system-reel.audio-active .beat-dot {
+  opacity: 1;
+  animation:
+    beatDotMove var(--track-duration, 33s) linear forwards,
+    beatDotBounce .55s cubic-bezier(.2,1.7,.35,1) infinite;
+}
+
+@keyframes beatBar {
+  0%, 100% {
+    height: 5px;
+    opacity: .32;
+    filter: blur(0);
+  }
+
+  35% {
+    height: 34px;
+    opacity: .95;
+    filter: blur(.2px);
+  }
+
+  60% {
+    height: 16px;
+    opacity: .65;
+  }
+}
+
+@keyframes beatDotMove {
+  from {
+    left: 0%;
+  }
+
+  to {
+    left: calc(100% - 18px);
+  }
+}
+
+@keyframes beatDotBounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+
+  45% {
+    transform: translateY(-22px) scale(1.18, .86);
+  }
+
+  70% {
+    transform: translateY(4px) scale(.9, 1.16);
+  }
 }
 
 .reel-progress span {
@@ -1930,11 +2171,904 @@
   }
 }
 
-@keyframes reelProgress {
-  from { width: 0%; }
-  to { width: 100%; }
+
+.jp-motion {
+  margin-top: 10px;
 }
 
+.jp-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 340px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.12);
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,.035) 1px, transparent 1px),
+    radial-gradient(circle at 18% 30%, rgba(0,231,255,.14), transparent 30%),
+    radial-gradient(circle at 78% 70%, rgba(255,77,255,.12), transparent 32%),
+    linear-gradient(135deg, #0b0c12, #171827);
+  background-size: 42px 42px, 42px 42px, auto, auto, auto;
+  padding: 38px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.jp-small {
+  position: relative;
+  z-index: 3;
+  font-size: 12px;
+  letter-spacing: .22em;
+  color: var(--lime);
+  margin-bottom: 18px;
+}
+
+.jp-line {
+  position: relative;
+  z-index: 3;
+  max-width: 520px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 16px 0 0;
+}
+
+.jp-vertical {
+  position: absolute;
+  right: 26px;
+  top: 24px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 28px;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.18);
+  z-index: 2;
+  animation: verticalSlide 15s ease-in-out infinite;
+}
+
+/* ================================
+   ARCLUME // PERSONA MOTION CHAPTERS
+   6 different scene types
+================================ */
+
+.jp-cinematic-stage {
+  min-height: 470px;
+  position: relative;
+  overflow: hidden;
+  perspective: 1200px;
+}
+
+.jp-motion-field {
+  position: relative;
+  z-index: 5;
+  height: 290px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+.p5-word {
+  position: absolute;
+  left: 28px;
+  top: 50%;
+  z-index: 20;
+  font-size: clamp(54px, 10vw, 136px);
+  line-height: .82;
+  font-weight: 900;
+  letter-spacing: -.085em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-50%);
+  filter: drop-shadow(0 0 34px rgba(0,231,255,.36));
+}
+
+.p5-panel,
+.p5-slash,
+.p5-strip,
+.p5-ring,
+.p5-line,
+.p5-mini,
+.p5-jp,
+.p5-repeat,
+.p5-number {
+  position: absolute;
+  pointer-events: none;
+}
+
+.p5-panel {
+  z-index: 8;
+  opacity: 0;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.08);
+  mix-blend-mode: screen;
+  transform-origin: center;
+}
+
+.p5-slash {
+  z-index: 18;
+  height: 72px;
+  width: 140%;
+  left: -20%;
+  opacity: 0;
+  border-radius: 6px;
+  mix-blend-mode: screen;
+  transform: rotate(-12deg) translateX(-135%);
+  filter: drop-shadow(0 0 24px rgba(0,231,255,.55));
+}
+
+.p5-strip {
+  z-index: 16;
+  height: 20px;
+  width: 120%;
+  left: -10%;
+  opacity: 0;
+  border-radius: 999px;
+  mix-blend-mode: screen;
+}
+
+.p5-ring {
+  z-index: 11;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,231,255,.45);
+  box-shadow: 0 0 60px rgba(0,231,255,.22);
+  opacity: 0;
+}
+
+.p5-line {
+  z-index: 10;
+  height: 2px;
+  width: 0;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  box-shadow: 0 0 18px rgba(0,231,255,.55);
+}
+
+.p5-mini {
+  z-index: 22;
+  font-size: 12px;
+  letter-spacing: .18em;
+  color: var(--lime);
+  text-transform: uppercase;
+  opacity: 0;
+}
+
+.p5-jp {
+  z-index: 21;
+  right: 28px;
+  top: 28px;
+  writing-mode: vertical-rl;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.18);
+  opacity: 0;
+}
+
+.p5-repeat {
+  z-index: 7;
+  left: 28px;
+  top: 50%;
+  font-size: clamp(46px, 9vw, 118px);
+  line-height: .82;
+  font-weight: 900;
+  letter-spacing: -.08em;
+  color: rgba(255,255,255,.08);
+  opacity: 0;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+.p5-number {
+  left: 24px;
+  bottom: 10px;
+  z-index: 21;
+  font-size: 78px;
+  font-weight: 900;
+  letter-spacing: -.08em;
+  color: rgba(255,255,255,.08);
+  opacity: 0;
+}
+
+.p5-world-ghost {
+  position: absolute;
+  z-index: 7;
+  left: 28px;
+  top: 50%;
+  font-size: clamp(54px, 10vw, 136px);
+  line-height: .82;
+  font-weight: 900;
+  letter-spacing: -.085em;
+  color: rgba(255,255,255,.08);
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.p5-shake {
+  animation: p5Shake .28s steps(2, end);
+}
+
+@keyframes p5Shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-8px) rotate(-.4deg); }
+  50% { transform: translateX(7px) rotate(.4deg); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+.jp-counter {
+  position: absolute;
+  right: 34px;
+  bottom: 28px;
+  z-index: 8;
+  font-size: 11px;
+  letter-spacing: .16em;
+  color: rgba(255,255,255,.34);
+  font-family: monospace;
+}
+
+/* CLASSIC GOTHIC ARCLUME GATE */
+.katana-gate {
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(51,120,255,.12), transparent 34%),
+    radial-gradient(ellipse at 50% 65%, rgba(0,231,255,.14), transparent 42%),
+    radial-gradient(ellipse at 50% 50%, rgba(255,77,255,.08), transparent 60%),
+    linear-gradient(180deg, #05050a 0%, #0b1020 55%, #05050a 100%);
+}
+
+.katana-gate::before {
+  content: "";
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 4%;
+  bottom: 4%;
+  border-radius: 180px 180px 18px 18px;
+  border: 2px solid rgba(0,231,255,.38);
+  box-shadow:
+    inset 0 0 40px rgba(0,231,255,.08),
+    0 0 34px rgba(0,231,255,.14),
+    0 0 80px rgba(255,77,255,.08);
+  z-index: 6;
+  pointer-events: none;
+}
+
+.katana-gate::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 9%;
+  bottom: 10%;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(51,120,255,.75),
+    rgba(0,231,255,.95),
+    rgba(255,77,255,.65),
+    transparent
+  );
+
+  box-shadow:
+    0 0 18px rgba(0,231,255,.8),
+    0 0 42px rgba(255,77,255,.25);
+
+  z-index: 7;
+}
+
+.gate-panel {
+  position: absolute;
+  top: 0;
+  width: 51%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(0,231,255,.16);
+
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,.02) 1px, transparent 1px),
+    radial-gradient(circle at 50% 22%, rgba(51,120,255,.12), transparent 20%),
+    linear-gradient(145deg, #090812 0%, #12192d 48%, #08070f 100%);
+
+  background-size: 56px 56px, 56px 56px, auto, auto;
+
+  transition:
+    transform 1s cubic-bezier(.16,1,.3,1),
+    opacity .45s ease .55s;
+}
+
+.gate-left {
+  left: 0;
+  transform-origin: left center;
+}
+
+.gate-right {
+  right: 0;
+  transform-origin: right center;
+}
+
+/* inner gothic arch */
+.gate-panel::before {
+  content: "";
+  position: absolute;
+  top: 8%;
+  bottom: 8%;
+  width: 76%;
+
+  border: 1px solid rgba(0,231,255,.28);
+
+  border-radius: 150px 150px 14px 14px;
+
+  box-shadow:
+    inset 0 0 34px rgba(0,231,255,.06),
+    0 0 20px rgba(255,77,255,.08);
+}
+
+/* left/right arch placement */
+.gate-left::before {
+  right: 5%;
+}
+
+.gate-right::before {
+  left: 5%;
+}
+
+/* glowing pillar */
+.gate-panel::after {
+  content: "";
+  position: absolute;
+  top: 16%;
+  bottom: 10%;
+  width: 4px;
+  border-radius: 999px;
+
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(51,120,255,.75),
+    rgba(0,231,255,.95),
+    rgba(255,77,255,.55),
+    transparent
+  );
+
+  box-shadow:
+    0 0 18px rgba(0,231,255,.75),
+    0 0 36px rgba(255,77,255,.22);
+
+  animation: gothicGatePulse 2.8s ease-in-out infinite;
+}
+
+.gate-left::after {
+  right: 22%;
+}
+
+.gate-right::after {
+  left: 22%;
+}
+
+/* click label */
+.gate-text {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  transform: translate(-50%, -50%);
+  z-index: 12;
+
+  white-space: nowrap;
+
+  color: #00E7FF;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .22em;
+
+  text-shadow:
+    0 0 12px rgba(0,231,255,.75),
+    0 0 28px rgba(0,231,255,.45);
+}
+.gate-text .split-t,
+.gate-text .split-o {
+  display: inline-block;
+  position: relative;
+}
+
+.gate-text .split-t {
+  margin-right: 18px;
+}
+
+.gate-text .split-o {
+  margin-left: 18px;
+}
+.gate-text::before {
+  content: "GOTHIC ACCESS / 光弧門";
+  position: absolute;
+  left: 50%;
+  top: -54px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: rgba(230,232,255,.42);
+  font-size: 11px;
+  letter-spacing: .22em;
+}
+
+.gate-text::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 40px;
+  width: 170px;
+  height: 1px;
+  transform: translateX(-50%);
+background: linear-gradient(
+  90deg,
+  transparent,
+  #3378FF,
+  #00E7FF,
+  #FF4DFF,
+  transparent
+);
+
+box-shadow:
+  0 0 18px rgba(0,231,255,.65),
+  0 0 34px rgba(255,77,255,.28);
+}
+
+/* katana slash */
+.katana-cut {
+  position: absolute;
+  left: -20%;
+  top: 50%;
+  width: 140%;
+  height: 5px;
+  z-index: 20;
+  opacity: 0;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #fff,
+    #3378FF,
+    #00E7FF,
+    #FF4DFF,
+    transparent
+  );
+  box-shadow:
+    0 0 34px rgba(0,231,255,.95),
+    0 0 70px rgba(255,77,255,.28);
+  transform: rotate(-10deg) translateX(-130%);
+}
+
+.jp-cinematic-stage.opened .katana-cut {
+  animation: katanaSlash .55s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+.jp-cinematic-stage.opened .gate-left {
+  transform: translateX(-105%) skewY(-3deg);
+  opacity: 0;
+}
+
+.jp-cinematic-stage.opened .gate-right {
+  transform: translateX(105%) skewY(3deg);
+  opacity: 0;
+}
+
+.jp-cinematic-stage.opened .gate-text {
+  opacity: 0;
+}
+
+.jp-cinematic-stage.opened .katana-gate {
+  pointer-events: none;
+  background: transparent;
+}
+
+.jp-cinematic-stage.opened .katana-gate::before,
+.jp-cinematic-stage.opened .katana-gate::after {
+  opacity: 0;
+}
+
+/* animations */
+@keyframes gothicGatePulse {
+  0%, 100% {
+    opacity: .45;
+    transform: scaleY(.82);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scaleY(1.05);
+  }
+}
+
+@keyframes katanaSlash {
+  0% {
+    opacity: 0;
+    transform: rotate(-10deg) translateX(-130%);
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(-10deg) translateX(135%);
+  }
+}
+
+.final-constellation {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.final-word {
+  position: absolute;
+  font-weight: 900;
+  letter-spacing: -.06em;
+  opacity: 0;
+  color: rgba(255,255,255,.14);
+  animation: gatherWord 4.8s ease-in-out infinite;
+}
+
+.final-word.accent {
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #00E7FF 35%,
+    #3378FF 68%,
+    #FF4DFF 100%
+  );
+z-index: 20;
+text-align: center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+
+  text-shadow:
+    0 0 18px rgba(0,231,255,.28),
+    0 0 42px rgba(255,77,255,.14);
+}
+.final-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,231,255,.35);
+  box-shadow: 0 0 60px rgba(0,231,255,.22);
+  transform: translate(-50%,-50%);
+  animation: finalPulse 2.8s ease-in-out infinite;
+}
+
+@keyframes gatherWord {
+  0% {
+    opacity: 0;
+    transform: var(--base) translate(var(--x), var(--y)) rotate(var(--r)) scale(.8);
+    filter: blur(4px);
+  }
+
+  35% {
+    opacity: .9;
+    filter: blur(0);
+  }
+
+  70% {
+    opacity: .55;
+    transform: var(--base) translate(0,0) rotate(0deg) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: var(--base) translate(0,0) rotate(0deg) scale(.92);
+  }
+}
+
+/* SHOWCASE PANEL */
+.showcase-panel {
+  display: none;
+  margin: 22px 0;
+  padding: 28px;
+  border-radius: 24px;
+  position: relative;
+  border: 1px solid rgba(0,231,255,.16);
+  background: linear-gradient(135deg, rgba(8,18,38,.94), rgba(18,10,38,.94));
+}
+
+.showcase-panel h3 {
+  margin: 0 42px 14px 0;
+}
+
+.showcase-panel p {
+  margin: 0;
+}
+
+.showcase-panel.open {
+  display: block;
+  animation: showcaseReveal .45s ease;
+}
+
+.showcase-close {
+  position: absolute;
+  right: 18px;
+  top: 14px;
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.showcase-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.showcase-shot {
+  min-height: 150px;
+  width: 100%;
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.04);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color .28s ease, background .28s ease, box-shadow .28s ease, transform .28s ease;
+}
+
+.showcase-shot b {
+  color: #fff;
+  font-size: 1rem;
+}
+
+.showcase-shot span {
+  display: block;
+  max-width: 210px;
+  margin-top: 8px;
+  font-size: .82rem;
+  line-height: 1.4;
+}
+
+.showcase-shot:hover,
+.showcase-shot.is-selected {
+  border-color: rgba(0,231,255,.52);
+  background: linear-gradient(135deg, rgba(0,231,255,.12), rgba(255,77,255,.10));
+  box-shadow: 0 12px 34px rgba(0, 231, 255, .12);
+  transform: translateY(-3px);
+}
+
+.product-showcase {
+  display: none;
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
+.product-showcase.open {
+  display: block;
+  animation: showcaseReveal .35s ease;
+}
+
+.product-showcase-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.showcase-eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: var(--cyan);
+  font-size: .76rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.product-showcase h4 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+
+.product-showcase p {
+  color: var(--muted);
+  max-width: 680px;
+  line-height: 1.5;
+}
+
+.showcase-back {
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+  color: #fff;
+  cursor: pointer;
+  padding: 10px 14px;
+  white-space: nowrap;
+  font: inherit;
+}
+
+.showcase-back:hover {
+  border-color: var(--cyan);
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.product-card {
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.045);
+}
+
+.product-cover {
+  width: 100%;
+  aspect-ratio: 16/10;
+  border: 0;
+  padding: 0;
+  background: #10111a center/cover no-repeat;
+  cursor: zoom-in;
+  display: block;
+  transition: transform .28s ease, filter .28s ease;
+}
+
+.product-cover:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: -4px;
+}
+
+.product-card:hover .product-cover {
+  filter: brightness(1.08);
+  transform: scale(1.02);
+}
+
+.product-copy {
+  padding: 14px;
+}
+
+.product-copy h5 {
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: .98rem;
+}
+
+.product-copy p {
+  margin: 0;
+  font-size: .84rem;
+}
+
+.product-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.product-tags span {
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: .72rem;
+  padding: 4px 8px;
+}
+
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: none;
+  place-items: center;
+  padding: 26px;
+  background: rgba(4, 5, 12, .84);
+  backdrop-filter: blur(12px);
+}
+
+.image-lightbox.open {
+  display: grid;
+  animation: showcaseReveal .24s ease;
+}
+
+.image-lightbox-frame {
+  position: relative;
+  width: min(1040px, 94vw);
+  max-height: 88vh;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: linear-gradient(135deg, rgba(12,18,32,.96), rgba(18,10,38,.96));
+  box-shadow: 0 28px 90px rgba(0,0,0,.58);
+  overflow: hidden;
+}
+
+.image-lightbox img {
+  width: 100%;
+  max-height: 76vh;
+  object-fit: contain;
+  background: rgba(255,255,255,.04);
+}
+
+.image-lightbox iframe {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: 0;
+  display: none;
+  background: #000;
+}
+
+.image-lightbox-caption {
+  padding: 14px 18px 16px;
+  color: #fff;
+  font-size: .95rem;
+}
+
+.image-lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  background: rgba(0,0,0,.46);
+  color: #fff;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.image-lightbox-close:hover {
+  border-color: var(--cyan);
+}
+
+@media (max-width: 900px) {
+  .showcase-grid,
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .showcase-panel {
+    padding: 22px 16px;
+    border-radius: 18px;
+  }
+
+  .showcase-grid,
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-showcase-head {
+    display: block;
+  }
+
+  .showcase-back {
+    margin-top: 14px;
+  }
+}
+
+@keyframes showcaseReveal {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
    </style>
 </head>
 <body class="bg-grid">
@@ -1982,15 +3116,41 @@
     </div>
   </section>
 
-  <section id="work" class="section">
+<section id="visual-philosophy" class="section jp-motion">
+  <div class="jp-card jp-cinematic-stage" id="jpCinematic">
+    <audio id="katanaSound" src="./audio/DS_SwordSlice.mp3" preload="auto"></audio>
+<audio id="personaSound" src="./audio/Crown of Ashes.mp3" preload="auto"></audio>
+
+<div class="katana-gate" id="katanaGate">
+  <div class="gate-panel gate-left"></div>
+  <div class="gate-panel gate-right"></div>
+  <div class="katana-cut"></div>
+<div class="gate-text">
+  CLICK <span class="split-t">T</span><span class="split-o">O</span> OPEN
+</div>
+</div>
+    <div class="jp-small" id="jpKicker">視覚思想 / VISUAL PHILOSOPHY</div>
+
+    <div class="jp-motion-field" id="jpMotionField"></div>
+
+    <div class="jp-vertical">構想・信号・編集・世界・光弧</div>
+
+    <p class="jp-line" id="jpLine">
+      Visual systems for games, brands, and stories.
+    </p>
+
+    <div class="jp-counter" id="jpCounter">01 / 06</div>
+  </div>
+</section>
+
+  
    <section id="system-reel" class="section reel-section">
   <div class="reel-card">
     <div class="reel-stage">
       <div class="reel-scene active" data-scene="0">
-        <span class="reel-kicker">SIGNAL</span>
-        <h2>ARCLUME</h2>
-        <p>From Scattered Signals to a Clear Creative system</p>
-      </div>
+<span class="reel-kicker">AUDIO SIGNAL</span>
+<h2>ARCLUME PULSE</h2>
+<p>Visual identity awakened by rhythm, motion, and light.</p>
 
       <div class="reel-scene" data-scene="1">
         <span class="reel-kicker">WORLDBUILDING</span>
@@ -2007,7 +3167,7 @@
       <div class="reel-scene" data-scene="3">
         <span class="reel-kicker">BRAND SYSTEM</span>
         <h2>Bold Identities</h2>
-        <p>Logo, palette, layout AND packaging locked into structure.</p>
+        <p>Logo, palette, layout AND packaging locked into structure</p>
       </div>
 
       <div class="reel-scene" data-scene="4">
@@ -2021,46 +3181,82 @@
       <div class="reel-core"></div>
     </div>
 
-    <div class="reel-progress">
-      <span></span>
-    </div>
+<div class="reel-progress">
+  <div class="beat-dot"></div>
+
+  <div class="beat-bars">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
   </div>
+</div>
 </section>
 
+<section id="work" class="section">
 <div class="system-visual">
 
-<div class="step" data-step="discover">
+<div class="step" data-step="brand">
   <div class="step-inner">
-    <b>01</b><br>DISCOVER
-    <p class="sub">Analyze context. Define clear visual direction.</p>
+    <b>01</b><br>BRAND SYSTEMS
+    <p class="sub">Identity, visual DNA, logo architecture.</p>
   </div>
 </div>
 
-  <div class="step" data-step="define">
+  <div class="step" data-step="motion">
      <div class="step-inner">
-    <b>02</b><br>DEFINE
+    <b>02</b><br>MOTION DESIGN
     <p class="sub">
-      Build the visual direction color system, style rules & UI structure.    
+      Reveal systems, kinetic typography, visual motion.    
     </p>
     </div>
   </div>
 
-  <div class="step" data-step="build">
+  <div class="step" data-step="digital">
         <div class="step-inner">
-    <b>03</b><br>BUILD
+    <b>03</b><br>DIGITAL EXPERIENCES
     <p class="sub">
-      Create assets, UI elements & visual systems ready for real production.
+      Interactive interfaces, prototypes, web systems.
     </p>
     </div>
   </div>
 
-  <div class="step" data-step="refine">
+  <div class="step" data-step="world">
          <div class="step-inner">
-    <b>04</b><br>REFINE
+    <b>04</b><br>WORLD BUILDING
     <p class="sub">
-      Polish details, improve consistency, optimize for clarity & performance.
+      Concept art, environments, visual storytelling.
     </p>
    </div>
+  </div>
+</div>
+
+<!-- SHOW PANEL -->
+<div class="showcase-panel" id="showcasePanel">
+  <button class="showcase-close">×</button>
+  <h3 id="showcaseTitle">Brand Systems</h3>
+  <p id="showcaseDesc">Identity frameworks, visual languages, premium logo systems.</p>
+
+  <div class="showcase-grid" id="showcaseGrid"></div>
+  <div class="product-showcase" id="productShowcase" aria-live="polite">
+    <div class="product-showcase-head">
+      <div>
+        <span class="showcase-eyebrow">Selected service</span>
+        <h4 id="productShowcaseTitle">Logo Design Showcase</h4>
+        <p id="productShowcaseDesc">A focused board of logo-driven brand products.</p>
+      </div>
+      <button class="showcase-back" type="button" id="showcaseBack">Back to services</button>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+</div>
+
+<div class="image-lightbox" id="imageLightbox" aria-hidden="true">
+  <div class="image-lightbox-frame" role="dialog" aria-modal="true" aria-label="Media preview">
+    <button class="image-lightbox-close" type="button" id="imageLightboxClose">&times;</button>
+    <img id="imageLightboxImg" src="" alt="">
+    <iframe id="imageLightboxVideo" src="" title="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    <div class="image-lightbox-caption" id="imageLightboxCaption"></div>
   </div>
 </div>
 
@@ -2221,8 +3417,8 @@
       <article class="project" data-tags="brand">
         <div class="cover" style="background-image:url('./images/TetCampaign/POSTER-01.png');"></div>
         <div class="meta">
-          <h3>Tết Campaign — Branding & Logo</h3>
-          <span class="pill">Campaign</span><span class="pill">Festive</span><span class="pill">Marketing</span>
+          <h3>Pepsi Campaign - Branding & Logo</h3>
+          <span class="pill">Campaign</span><span class="pill">Branding</span><span class="pill">Marketing</span>
         </div>
       </article>
 
@@ -2266,7 +3462,7 @@
     <div class="card" id="catalog-show" style="padding:16px;min-height:280px;display:grid;place-items:center;text-align:center">
       <div>
         <div style="font-size:20px;margin-bottom:8px">Choose a category to preview</div>
-        <div class="sub">An animated showcase will appear here and the grid will filter below.</div>
+        <div class="sub">An animated showcase will appear here and the grid will filter below</div>
       </div>
     </div>
   </div>
@@ -2275,13 +3471,14 @@
 <!--CAMPAIGN SLIDES-->  
 <section id="campaigns">
   <h2><span class="spark">Campaign Showcase</span></h2>
+  <h3 class="campaign-set-title"><span>Pepsi</span> Campaign</h3>
   <div class="slider">
     <div class="slides">
       <!-- Slide 1 -->
       <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_1.png')">
         <div class="caption">
-          <b>Tết Campaign 2025</b>
-          Bringing festive vibes into vibrant branding visuals.
+          <b>Pepsi Campaign 2025</b>
+          Vibrant branding visuals for a bold Pepsi campaign.
         </div>
       </div>
       <!-- Slide 2 -->
@@ -2294,8 +3491,8 @@
       <!-- Slide 3 -->
       <div class="slide" style="background-image:url('./images/Campaigns/Pepsi_3.png')">
         <div class="caption">
-          <b>GreenNut — Organic Pack</b>
-          Tết gift basket design for a modern lifestyle.
+          <b>Pepsi Campaign</b>
+          Branding visuals for the Pepsi campaign showcase.
         </div>
       </div>
          <!-- Slide 4 -->
@@ -2511,8 +3708,231 @@
 
     </div>
     <div class="ctrl">
-      <button class="prev">◀</button>
-      <button class="next">▶</button>
+      <button class="prev" aria-label="Previous campaign slide">&#9664;</button>
+      <button class="next" aria-label="Next campaign slide">&#9654;</button>
+    </div>
+    <div class="dots"></div>
+    <div class="progress"><div class="bar"></div></div>
+  </div>
+
+  <h3 class="campaign-set-title"><span>Highlands Coffee</span> Campaign</h3>
+  <div class="slider contain-slides">
+    <div class="slides">
+      <!-- Highlands Slide 1 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/1.png')">
+        <div class="caption">
+          <b>Highlands Coffee Campaign</b>
+          Brand visuals and campaign direction for Highlands Coffee.
+        </div>
+      </div>
+      <!-- Highlands Slide 2 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/2.png')">
+      </div>
+      <!-- Highlands Slide 3 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/3.png')">
+      </div>
+      <!-- Highlands Slide 4 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/4.png')">
+      </div>
+      <!-- Highlands Slide 5 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/5.png')">
+      </div>
+      <!-- Highlands Slide 6 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/6.png')">
+      </div>
+      <!-- Highlands Slide 7 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/7.png')">
+      </div>
+      <!-- Highlands Slide 8 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/8.png')">
+      </div>
+      <!-- Highlands Slide 9 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/9.png')">
+      </div>
+      <!-- Highlands Slide 10 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/10.png')">
+      </div>
+      <!-- Highlands Slide 11 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/11.png')">
+      </div>
+      <!-- Highlands Slide 12 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/12.png')">
+      </div>
+      <!-- Highlands Slide 13 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/13.png')">
+      </div>
+      <!-- Highlands Slide 14 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/14.png')">
+      </div>
+      <!-- Highlands Slide 15 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/15.png')">
+      </div>
+      <!-- Highlands Slide 16 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/16.png')">
+      </div>
+      <!-- Highlands Slide 17 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/17.png')">
+      </div>
+      <!-- Highlands Slide 18 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/18.png')">
+      </div>
+      <!-- Highlands Slide 19 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/19.png')">
+      </div>
+      <!-- Highlands Slide 20 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/20.png')">
+      </div>
+      <!-- Highlands Slide 21 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/21.png')">
+      </div>
+      <!-- Highlands Slide 22 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/22.png')">
+      </div>
+      <!-- Highlands Slide 23 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/23.png')">
+      </div>
+      <!-- Highlands Slide 24 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/24.png')">
+      </div>
+      <!-- Highlands Slide 25 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/25.png')">
+      </div>
+      <!-- Highlands Slide 26 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/26.png')">
+      </div>
+      <!-- Highlands Slide 27 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/27.png')">
+      </div>
+      <!-- Highlands Slide 28 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/28.png')">
+      </div>
+      <!-- Highlands Slide 29 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/29.png')">
+      </div>
+      <!-- Highlands Slide 30 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/30.png')">
+      </div>
+      <!-- Highlands Slide 31 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/31.png')">
+      </div>
+      <!-- Highlands Slide 32 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/32.png')">
+      </div>
+      <!-- Highlands Slide 33 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/33.png')">
+      </div>
+      <!-- Highlands Slide 34 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/34.png')">
+      </div>
+      <!-- Highlands Slide 35 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/35.png')">
+      </div>
+      <!-- Highlands Slide 36 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/36.png')">
+      </div>
+      <!-- Highlands Slide 37 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/37.png')">
+      </div>
+      <!-- Highlands Slide 38 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/38.png')">
+      </div>
+      <!-- Highlands Slide 39 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/39.png')">
+      </div>
+      <!-- Highlands Slide 40 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/40.png')">
+      </div>
+      <!-- Highlands Slide 41 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/41.png')">
+      </div>
+      <!-- Highlands Slide 42 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/42.png')">
+      </div>
+      <!-- Highlands Slide 43 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/43.png')">
+      </div>
+      <!-- Highlands Slide 44 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/44.png')">
+      </div>
+      <!-- Highlands Slide 45 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/45.png')">
+      </div>
+      <!-- Highlands Slide 46 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/46.png')">
+      </div>
+      <!-- Highlands Slide 47 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/47.png')">
+      </div>
+      <!-- Highlands Slide 48 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/48.png')">
+      </div>
+      <!-- Highlands Slide 49 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/49.png')">
+      </div>
+      <!-- Highlands Slide 50 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/50.png')">
+      </div>
+      <!-- Highlands Slide 51 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/51.png')">
+      </div>
+      <!-- Highlands Slide 52 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/52.png')">
+      </div>
+      <!-- Highlands Slide 53 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/53.png')">
+      </div>
+      <!-- Highlands Slide 54 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/54.png')">
+      </div>
+      <!-- Highlands Slide 55 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/55.png')">
+      </div>
+      <!-- Highlands Slide 56 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/56.png')">
+      </div>
+      <!-- Highlands Slide 57 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/57.png')">
+      </div>
+      <!-- Highlands Slide 58 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/58.png')">
+      </div>
+      <!-- Highlands Slide 59 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/59.png')">
+      </div>
+      <!-- Highlands Slide 60 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/60.png')">
+      </div>
+      <!-- Highlands Slide 61 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/61.png')">
+      </div>
+      <!-- Highlands Slide 62 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/62.png')">
+      </div>
+      <!-- Highlands Slide 63 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/63.png')">
+      </div>
+      <!-- Highlands Slide 64 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/64.png')">
+      </div>
+      <!-- Highlands Slide 65 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/65.png')">
+      </div>
+      <!-- Highlands Slide 66 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/66.png')">
+      </div>
+      <!-- Highlands Slide 67 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/67.png')">
+      </div>
+      <!-- Highlands Slide 68 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/68.png')">
+      </div>
+      <!-- Highlands Slide 69 -->
+      <div class="slide" style="background-image:url('./images/Campaigns/HIGHLANDSCOFFEE PROJECT/69.png')">
+      </div>
+    </div>
+    <div class="ctrl">
+      <button class="prev" aria-label="Previous campaign slide">&#9664;</button>
+      <button class="next" aria-label="Next campaign slide">&#9654;</button>
     </div>
     <div class="dots"></div>
     <div class="progress"><div class="bar"></div></div>
@@ -2686,8 +4106,8 @@
 <div class="lightbox" id="lightbox" aria-modal="true" role="dialog">
 <div class="lb-wrap">
 <div class="lb-ctrls">
-<button class="lb-btn lb-prev" aria-label="Previous">◀</button>
-<button class="lb-btn lb-next" aria-label="Next">▶</button>
+<button class="lb-btn lb-prev" aria-label="Previous">&#9664;</button>
+<button class="lb-btn lb-next" aria-label="Next">&#9654;</button>
 </div>
 <button class="lb-btn lb-close" aria-label="Close">✕</button>
 <div class="lb-media"><img id="lb-img" alt="lightbox image"/></div>
@@ -2706,6 +4126,92 @@ const chips = [...document.querySelectorAll('.chip')];
 const cards = [...document.querySelectorAll('.project')];
 const tocLinks = [...document.querySelectorAll('.toc a')];
 const catalogShow = document.getElementById('catalog-show');
+
+// ====== CAMPAIGN SHOWCASE SLIDER ======
+(() => {
+  const campaign = document.getElementById('campaigns');
+  if (!campaign) return;
+
+  const sliders = [...campaign.querySelectorAll('.slider')];
+  const delay = 4500;
+
+  sliders.forEach(slider => {
+    const track = slider.querySelector('.slides');
+    const slides = [...slider.querySelectorAll('.slide')];
+    const prev = slider.querySelector('.prev');
+    const next = slider.querySelector('.next');
+    const dots = slider.querySelector('.dots');
+    const bar = slider.querySelector('.progress .bar');
+
+    if (!track || !slides.length || !prev || !next) return;
+
+    let index = 0;
+    let timer = null;
+
+    function renderDots() {
+      if (!dots || dots.children.length) return;
+      dots.innerHTML = slides
+        .map((_, i) => `<button class="dot" type="button" aria-label="Go to campaign slide ${i + 1}"></button>`)
+        .join('');
+
+      dots.querySelectorAll('.dot').forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          goTo(i);
+          restart();
+        });
+      });
+    }
+
+    function animateProgress() {
+      if (!bar) return;
+
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
+      void bar.offsetWidth;
+      bar.style.transition = `width ${delay}ms linear`;
+      bar.style.width = '100%';
+    }
+
+    function goTo(nextIndex) {
+      index = (nextIndex + slides.length) % slides.length;
+      track.style.transform = `translateX(-${index * 100}%)`;
+
+      if (dots) {
+        dots.querySelectorAll('.dot').forEach((dot, i) => {
+          dot.classList.toggle('active', i === index);
+        });
+      }
+
+      animateProgress();
+    }
+
+    function restart() {
+      if (timer) clearInterval(timer);
+      timer = setInterval(() => goTo(index + 1), delay);
+    }
+
+    prev.addEventListener('click', () => {
+      goTo(index - 1);
+      restart();
+    });
+
+    next.addEventListener('click', () => {
+      goTo(index + 1);
+      restart();
+    });
+
+    slider.addEventListener('mouseenter', () => {
+      if (timer) clearInterval(timer);
+      if (bar) bar.style.transition = 'none';
+    });
+
+    slider.addEventListener('mouseleave', restart);
+
+    renderDots();
+    goTo(0);
+    restart();
+  });
+})();
 
 // ====== LIGHTBOX ======
 const lb = document.getElementById('lightbox');
@@ -2838,111 +4344,940 @@ renderCatalog(initTag);
 applyFilter(initTag);
 // đồng bộ chip active theo TOC
 chips.forEach(c=>c.classList.toggle('active', c.dataset.filter===initTag));
-</script>
 
-<script>
 (() => {
-  const root = document.querySelector('#campaigns');
-  if (!root) return;
+  const stage = document.getElementById('jpCinematic');
+  const field = document.getElementById('jpMotionField');
+  const kicker = document.getElementById('jpKicker');
+  const line = document.getElementById('jpLine');
+  const counter = document.getElementById('jpCounter');
 
-  const slides = root.querySelector('.slides');
-  const slideEls = root.querySelectorAll('.slide');
-  const dotsEl  = root.querySelector('.dots');
-  const bar     = root.querySelector('.progress .bar');
-  const prevBtn = root.querySelector('.prev');
-  const nextBtn = root.querySelector('.next');
+  if (!stage || !field) return;
 
-  let idx = 0, timer, duration = 5000;
-
-  // tạo dots
-  slideEls.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.addEventListener('click', () => go(i));
-    dotsEl.appendChild(d);
-  });
-  const dots = dotsEl.querySelectorAll('.dot');
-
-  function go(i){
-    idx = (i + slideEls.length) % slideEls.length;
-    slides.style.transform = `translateX(-${idx * 100}%)`;
-    dots.forEach((d, j) => d.classList.toggle('active', j === idx));
-    resetTimer();
-  }
-  function next(){ go(idx + 1); }
-  function prev(){ go(idx - 1); }
-
-  function resetTimer(){
-    clearInterval(timer);
-    if (bar) {
-      bar.style.transition = 'none';
-      bar.style.width = '0';
-      requestAnimationFrame(() => {
-        bar.style.transition = `width ${duration}ms linear`;
-        bar.style.width = '100%';
-      });
+  const scenes = [
+    {
+      word: 'SIGNAL',
+      jp: '信号',
+      count: '01 / 06',
+      label: 'SCAN THE NOISE',
+      line: 'Finding clarity inside visual noise.',
+      gradient: 'linear-gradient(90deg,#fff,#00e7ff,#a78bfa)',
+      accent: 'rgba(0,231,255,.95)',
+      mode: 'slash'
+    },
+    {
+      word: 'DECODE',
+      jp: '解読',
+      count: '02 / 06',
+      label: 'READ THE SYSTEM',
+      line: 'Turning fragments into readable direction.',
+      gradient: 'linear-gradient(90deg,#fff,#ff4dff,#c084fc)',
+      accent: 'rgba(255,77,255,.9)',
+      mode: 'split'
+    },
+    {
+      word: 'GRID',
+      jp: '構造',
+      count: '03 / 06',
+      label: 'LOCK THE FRAME',
+      line: 'Building structure before visual surface.',
+      gradient: 'linear-gradient(90deg,#fff,#00e7ff,#caff72)',
+      accent: 'rgba(202,255,114,.9)',
+      mode: 'editorial'
+    },
+    {
+      word: 'MOTION',
+      jp: '動勢',
+      count: '04 / 06',
+      label: 'PUSH THE TEMPO',
+      line: 'Giving design speed, rhythm  and force.',
+      gradient: 'linear-gradient(90deg,#caff72,#00e7ff,#fff)',
+      accent: 'rgba(0,231,255,.95)',
+      mode: 'velocity'
+    },
+    {
+      word: 'WORLD',
+      jp: '没入',
+      count: '05 / 06',
+      label: 'BUILD THE AURA',
+      line: 'Creating atmosphere, depth and immersion.',
+      gradient: 'linear-gradient(90deg,#fff,#a78bfa,#00e7ff)',
+      accent: 'rgba(167,139,250,.95)',
+      mode: 'world'
+    },
+    {
+      word: 'ARCLUME',
+      jp: '光弧',
+      count: '06 / 06',
+      label: 'FINAL LOCKUP',
+      line: 'Visual systems for games, brands and stories.',
+      gradient: 'linear-gradient(90deg,#fff,#00e7ff,#ff4dff)',
+      accent: 'rgba(255,77,255,.9)',
+      mode: 'final'
     }
-    timer = setInterval(next, duration);
+  ];
+
+  let index = 0;
+  let busy = false;
+  let introStarted = false;
+
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const raf = fn => new Promise(r => requestAnimationFrame(() => { fn(); r(); }));
+
+  function clearField() {
+    field.innerHTML = '';
+    stage.classList.remove('p5-shake');
   }
 
-  prevBtn.addEventListener('click', prev);
-  nextBtn.addEventListener('click', next);
+  function closeGate() {
+  stage.classList.remove('opened');
+  clearField();
 
-  resetTimer();
+  kicker.textContent = 'ONLY ONE';
+  line.textContent = 'Visual systems for games, brands, and stories.';
+  counter.textContent = '01 / 06';
+
+  index = 0;
+  busy = false;
+  introStarted = false;
+}
+
+  function shake() {
+    stage.classList.remove('p5-shake');
+    void stage.offsetWidth;
+    stage.classList.add('p5-shake');
+  }
+
+  function makeWord(scene) {
+    const word = document.createElement('div');
+    word.className = 'p5-word';
+    word.textContent = scene.word;
+    word.style.background = scene.gradient;
+    word.style.webkitBackgroundClip = 'text';
+    word.style.backgroundClip = 'text';
+    word.style.webkitTextFillColor = 'transparent';
+    word.style.color = 'transparent';
+    field.appendChild(word);
+    return word;
+  }
+
+  function makeMeta(scene) {
+    const mini = document.createElement('span');
+    mini.className = 'p5-mini';
+    mini.textContent = scene.label;
+    mini.style.left = '34px';
+    mini.style.top = '34px';
+    field.appendChild(mini);
+
+    const jp = document.createElement('div');
+    jp.className = 'p5-jp';
+    jp.textContent = scene.jp;
+    field.appendChild(jp);
+
+    const num = document.createElement('div');
+    num.className = 'p5-number';
+    num.textContent = scene.count.split('/')[0].trim();
+    field.appendChild(num);
+
+    return { mini, jp, num };
+  }
+
+  function showMeta(meta) {
+    meta.mini.style.transition = 'opacity 120ms ease, transform 260ms cubic-bezier(.16,1.4,.3,1)';
+    meta.mini.style.opacity = '1';
+    meta.mini.style.transform = 'translateX(12px)';
+
+    meta.jp.style.transition = 'opacity 160ms ease, transform 340ms cubic-bezier(.16,1.4,.3,1)';
+    meta.jp.style.opacity = '.85';
+    meta.jp.style.transform = 'translateY(12px) rotate(3deg)';
+
+    meta.num.style.transition = 'opacity 160ms ease, transform 360ms cubic-bezier(.16,1.4,.3,1)';
+    meta.num.style.opacity = '1';
+    meta.num.style.transform = 'translateY(-8px)';
+  }
+
+  function slash(scene, top, rotate = -12, delay = 0, height = 72) {
+    const s = document.createElement('span');
+    s.className = 'p5-slash';
+    s.style.top = `${top}px`;
+    s.style.height = `${height}px`;
+    s.style.background = `linear-gradient(90deg, transparent, ${scene.accent}, rgba(255,255,255,.36), transparent)`;
+    s.style.transform = `rotate(${rotate}deg) translateX(-135%)`;
+    field.appendChild(s);
+
+    setTimeout(() => {
+      s.style.transition = 'opacity 80ms ease, transform 360ms cubic-bezier(.16,1,.3,1)';
+      s.style.opacity = '.95';
+      s.style.transform = `rotate(${rotate}deg) translateX(0%)`;
+    }, delay);
+
+    setTimeout(() => {
+      s.style.transition = 'opacity 140ms ease, transform 300ms cubic-bezier(.7,0,1,1)';
+      s.style.opacity = '0';
+      s.style.transform = `rotate(${rotate}deg) translateX(135%)`;
+    }, delay + 380);
+
+    setTimeout(() => s.remove(), delay + 760);
+  }
+
+  function panel(x, y, w, h, rotate, color) {
+    const p = document.createElement('span');
+    p.className = 'p5-panel';
+    p.style.left = `${x}%`;
+    p.style.top = `${y}px`;
+    p.style.width = `${w}%`;
+    p.style.height = `${h}px`;
+    p.style.background = color || 'rgba(255,255,255,.08)';
+    p.style.transform = `rotate(${rotate}deg) scaleX(0)`;
+    field.appendChild(p);
+    return p;
+  }
+
+  function strip(scene, top, rotate = 0, delay = 0) {
+    const s = document.createElement('span');
+    s.className = 'p5-strip';
+    s.style.top = `${top}px`;
+    s.style.background = `linear-gradient(90deg, transparent, ${scene.accent}, rgba(255,255,255,.22), transparent)`;
+    s.style.transform = `rotate(${rotate}deg) translateX(-130%)`;
+    field.appendChild(s);
+
+    setTimeout(() => {
+      s.style.transition = 'opacity 90ms ease, transform 360ms cubic-bezier(.16,1,.3,1)';
+      s.style.opacity = '.9';
+      s.style.transform = `rotate(${rotate}deg) translateX(140%)`;
+    }, delay);
+
+    setTimeout(() => s.remove(), delay + 520);
+  }
+
+  function repeatText(scene, x, y, opacity = .32, rotate = 0) {
+    const r = document.createElement('div');
+    r.className = 'p5-repeat';
+    r.textContent = scene.word;
+    r.style.left = `${x}px`;
+    r.style.top = `${y}%`;
+    r.style.opacity = '0';
+    r.style.transform = `translateY(-50%) rotate(${rotate}deg)`;
+    field.appendChild(r);
+
+    requestAnimationFrame(() => {
+      r.style.transition = 'opacity 160ms ease, transform 280ms ease';
+      r.style.opacity = opacity;
+      r.style.transform = `translateY(-50%) rotate(${rotate}deg) translateX(18px)`;
+    });
+
+    return r;
+  }
+
+function startFinalHold() {
+  clearField();
+
+  kicker.textContent = 'VAEL KOR SETH';
+  line.textContent = 'All signals converge into one visual system.';
+  counter.textContent = '∞';
+
+  const wrap = document.createElement('div');
+  wrap.className = 'final-constellation';
+
+  const core = document.createElement('div');
+  core.className = 'final-core';
+  wrap.appendChild(core);
+
+  const words = [
+    ['SIGNAL', '-360px', '-80px', '-8deg'],
+    ['DECODE', '300px', '-120px', '7deg'],
+    ['GRID', '-260px', '110px', '5deg'],
+    ['MOTION', '340px', '90px', '-6deg'],
+    ['WORLD', '-120px', '170px', '4deg'],
+    ['ARCLUME', '0px', '0px', '0deg']
+  ];
+
+  words.forEach(([text, x, y, r], i) => {
+    const el = document.createElement('div');
+    el.className = 'final-word' + (text === 'ARCLUME' ? ' accent' : '');
+    el.textContent = text;
+
+if (text === 'ARCLUME') {
+  el.style.left = '50%';
+  el.style.top = '50%';
+  el.style.fontSize = 'clamp(64px, 11vw, 150px)';
+  el.style.setProperty('--base', 'translate(-50%, -50%)');
+} else {
+  el.style.left = `${18 + i * 12}%`;
+  el.style.top = `${24 + (i % 3) * 18}%`;
+  el.style.fontSize = 'clamp(22px, 4vw, 54px)';
+  el.style.setProperty('--base', 'translate(0, 0)');
+}
+    el.style.setProperty('--x', x);
+    el.style.setProperty('--y', y);
+    el.style.setProperty('--r', r);
+    el.style.animationDelay = `${i * .28}s`;
+    wrap.appendChild(el);
+  });
+
+  field.appendChild(wrap);
+}
+  async function revealBase(scene, word, transformFrom) {
+    word.style.transform = transformFrom;
+    word.style.filter = 'blur(5px) drop-shadow(0 0 34px rgba(0,231,255,.36))';
+
+    await wait(180);
+
+    await raf(() => {
+      shake();
+      word.style.transition = 'opacity 90ms ease, transform 330ms cubic-bezier(.18,1.65,.3,1), filter 240ms ease';
+      word.style.opacity = '1';
+      word.style.transform = 'translateY(-50%) translateX(0) rotate(-2deg) skewX(0deg) scale(1)';
+      word.style.filter = 'blur(0) drop-shadow(0 0 38px rgba(0,231,255,.44))';
+    });
+  }
+
+  async function sceneSlash(scene, word) {
+    const p1 = panel(-10, 28, 46, 72, -10, scene.accent);
+    const p2 = panel(42, 70, 34, 92, 8, 'rgba(255,255,255,.12)');
+    const p3 = panel(12, 168, 58, 34, -4, 'rgba(0,231,255,.25)');
+
+    await raf(() => {
+      [p1, p2, p3].forEach((p, i) => {
+        p.style.transition = 'opacity 120ms ease, transform 360ms cubic-bezier(.16,1.4,.3,1)';
+        p.style.opacity = '.9';
+        p.style.transform = `rotate(${i === 1 ? 8 : -8}deg) scaleX(1)`;
+      });
+    });
+
+    slash(scene, 58, -12, 0);
+    slash(scene, 126, 8, 80);
+    slash(scene, 190, -5, 160);
+
+    await revealBase(scene, word, 'translateY(-50%) translateX(-90px) rotate(-7deg) skewX(-12deg) scale(.78)');
+
+    return [p1, p2, p3];
+  }
+
+  async function sceneSplit(scene, word) {
+    const panels = [
+      panel(-5, 24, 45, 54, -7, 'rgba(255,77,255,.65)'),
+      panel(34, 74, 52, 48, 6, 'rgba(255,255,255,.12)'),
+      panel(6, 134, 38, 54, -5, 'rgba(0,231,255,.28)'),
+      panel(52, 176, 36, 40, 9, scene.accent)
+    ];
+
+    panels.forEach((p, i) => {
+      setTimeout(() => {
+        p.style.transition = 'opacity 120ms ease, transform 360ms cubic-bezier(.16,1.4,.3,1)';
+        p.style.opacity = '.95';
+        p.style.transform = `rotate(${i % 2 ? 6 : -7}deg) scaleX(1)`;
+      }, i * 70);
+    });
+
+    ['SCAN', 'READ', 'SORT', 'TRACE'].forEach((t, i) => {
+      const m = document.createElement('span');
+      m.className = 'p5-mini';
+      m.textContent = t;
+      m.style.left = `${60 + i * 120}px`;
+      m.style.top = `${52 + (i % 2) * 78}px`;
+      field.appendChild(m);
+
+      setTimeout(() => {
+        m.style.transition = 'opacity 120ms ease, transform 260ms ease';
+        m.style.opacity = '1';
+        m.style.transform = 'translateY(-6px)';
+      }, i * 90);
+
+      setTimeout(() => m.remove(), 900);
+    });
+
+    strip(scene, 62, -4, 120);
+    strip(scene, 142, 5, 220);
+
+    await revealBase(scene, word, 'translateY(-50%) translateX(110px) rotate(6deg) skewX(-18deg) scale(.86)');
+
+    return panels;
+  }
+
+  async function sceneEditorial(scene, word) {
+    const boxes = [
+      panel(8, 42, 26, 150, 0, 'rgba(255,255,255,.08)'),
+      panel(36, 34, 18, 190, 0, 'rgba(202,255,114,.22)'),
+      panel(60, 72, 24, 116, 0, 'rgba(0,231,255,.18)')
+    ];
+
+    boxes.forEach((b, i) => {
+      setTimeout(() => {
+        b.style.transition = 'opacity 160ms ease, transform 420ms cubic-bezier(.16,1.3,.3,1)';
+        b.style.opacity = '.9';
+        b.style.transform = 'rotate(0deg) scaleX(1)';
+      }, i * 100);
+    });
+
+    const guides = [72, 124, 176].map((y, i) => {
+      const l = document.createElement('span');
+      l.className = 'p5-line';
+      l.style.left = '28px';
+      l.style.top = `${y}px`;
+      field.appendChild(l);
+
+      setTimeout(() => {
+        l.style.transition = 'opacity 120ms ease, width 420ms cubic-bezier(.16,1,.3,1)';
+        l.style.opacity = '.7';
+        l.style.width = `${48 + i * 12}%`;
+      }, i * 100);
+
+      return l;
+    });
+
+    await revealBase(scene, word, 'translateY(-50%) translateX(-40px) rotateX(55deg) scale(.78)');
+
+    setTimeout(() => guides.forEach(g => g.remove()), 900);
+    return boxes;
+  }
+
+  async function sceneVelocity(scene, word) {
+    const reps = [
+      repeatText(scene, 22, 38, .22, -5),
+      repeatText(scene, 68, 52, .28, 4),
+      repeatText(scene, 118, 66, .18, -3),
+      repeatText(scene, 168, 46, .14, 7)
+    ];
+
+    for (let i = 0; i < 5; i++) {
+      strip(scene, 40 + i * 36, i % 2 ? 7 : -8, i * 55);
+    }
+
+    await revealBase(scene, word, 'translateY(-50%) translateX(-180px) skewX(22deg) scale(.88)');
+
+    setTimeout(() => reps.forEach(r => r.remove()), 850);
+    return [];
+  }
+
+  async function sceneWorld(scene, word) {
+    const ghosts = [0, 1, 2].map((_, i) => {
+      const g = document.createElement('div');
+      g.className = 'p5-world-ghost';
+      g.textContent = scene.word;
+      g.style.left = `${28 + i * 48}px`;
+      g.style.top = `${48 + i * 8}%`;
+      g.style.color = i === 0 ? 'rgba(0,231,255,.13)' : i === 1 ? 'rgba(255,77,255,.11)' : 'rgba(255,255,255,.08)';
+      field.appendChild(g);
+
+      setTimeout(() => {
+        g.style.transition = 'opacity 260ms ease, transform 760ms cubic-bezier(.16,1,.3,1)';
+        g.style.opacity = '.8';
+        g.style.transform = 'translateY(-50%) translateX(22px)';
+      }, i * 120);
+
+      return g;
+    });
+
+    const slowPanel = panel(18, 48, 68, 150, -3, 'rgba(167,139,250,.14)');
+    slowPanel.style.transition = 'opacity 260ms ease, transform 700ms cubic-bezier(.16,1,.3,1)';
+    slowPanel.style.opacity = '.85';
+    slowPanel.style.transform = 'rotate(-3deg) scaleX(1)';
+
+    await wait(260);
+
+    await revealBase(scene, word, 'translateY(-50%) translateX(70px) scale(1.2)');
+
+    setTimeout(() => ghosts.forEach(g => g.remove()), 1100);
+    return [slowPanel];
+  }
+
+  async function sceneFinal(scene, word) {
+    const panels = await sceneSlash(scene, word);
+
+    const ring = document.createElement('span');
+    ring.className = 'p5-ring';
+    ring.style.left = '24%';
+    ring.style.top = '17%';
+    field.appendChild(ring);
+
+    await raf(() => {
+      ring.style.transition = 'opacity 140ms ease, transform 620ms cubic-bezier(.16,1.45,.28,1)';
+      ring.style.opacity = '.9';
+      ring.style.transform = 'scale(1.9)';
+    });
+
+    setTimeout(() => ring.remove(), 760);
+
+    return panels;
+  }
+
+  async function exitScene(scene, word, meta, elements) {
+    slash(scene, 118, 6, 0, 36);
+
+    word.style.transition = 'opacity 160ms ease, transform 260ms cubic-bezier(.7,0,1,1), filter 160ms ease';
+    word.style.opacity = '0';
+    word.style.transform = 'translateY(-50%) translateX(110px) rotate(5deg) skewX(-16deg) scale(1.1)';
+    word.style.filter = 'blur(5px)';
+
+    Object.values(meta).forEach(el => {
+      el.style.transition = 'opacity 120ms ease, transform 180ms ease';
+      el.style.opacity = '0';
+      el.style.transform += ' translateX(-20px)';
+    });
+
+    elements.forEach(el => {
+      el.style.transition = 'opacity 120ms ease, transform 180ms ease';
+      el.style.opacity = '0';
+    });
+
+    await wait(340);
+  }
+
+  async function play() {
+    if (busy) return;
+    busy = true;
+    clearField();
+
+    const scene = scenes[index];
+
+    kicker.textContent = 'AETH RA NOR VEL QORIN';
+    line.textContent = scene.line;
+    counter.textContent = scene.count;
+
+    const word = makeWord(scene);
+    const meta = makeMeta(scene);
+
+    let elements = [];
+
+    if (scene.mode === 'slash') elements = await sceneSlash(scene, word);
+    if (scene.mode === 'split') elements = await sceneSplit(scene, word);
+    if (scene.mode === 'editorial') elements = await sceneEditorial(scene, word);
+    if (scene.mode === 'velocity') elements = await sceneVelocity(scene, word);
+    if (scene.mode === 'world') elements = await sceneWorld(scene, word);
+    if (scene.mode === 'final') elements = await sceneFinal(scene, word);
+
+    showMeta(meta);
+
+    await wait(1120);
+    await exitScene(scene, word, meta, elements);
+
+if (index >= scenes.length - 1) {
+  busy = false;
+  startFinalHold();
+  return;
+}
+index++;
+busy = false;
+setTimeout(play, 150);
+  }
+
+const gate = document.getElementById('katanaGate');
+const katanaSound = document.getElementById('katanaSound');
+const personaSound = document.getElementById('personaSound');
+const systemReel = document.getElementById('system-reel');
+
+personaSound?.addEventListener('ended', () => {
+  systemReel?.classList.remove('audio-active');
+  closeGate();
+});
+gate?.addEventListener('click', async () => {
+  stage.classList.add('opened');
+
+  if (katanaSound) {
+    katanaSound.currentTime = 0;
+    katanaSound.play();
+  }
+
+  setTimeout(() => {
+    if (personaSound) {
+      personaSound.currentTime = 0;
+      personaSound.play();
+
+const duration = personaSound.duration || 33;
+systemReel?.style.setProperty('--track-duration', `${duration}s`);
+
+systemReel?.classList.remove('audio-active');
+void systemReel?.offsetWidth;
+systemReel?.classList.add('audio-active');
+    }
+    
+
+    play();
+  }, 650);
+});
 })();
 
-document.querySelectorAll('.step[data-step]').forEach(step => {
-  step.addEventListener('click', () => {
-    const id = step.dataset.step;
-    const target = document.getElementById(id + '-detail');
+// SHOWCASE PANEL
+const showcaseData = {
+  brand: {
+    title: 'Brand Systems',
+    desc: 'Identity frameworks, visual languages, logo systems and packaging direction.',
+    shots: [
+      {
+        key: 'logo',
+        title: 'Logo Design',
+        desc: 'Marks, lockups and symbol systems for brand-first products.',
+        products: [
+          {
+            title: 'GreenNut - Logo & Identity',
+            desc: 'Primary logo direction with a clean organic mark and flexible identity use.',
+            image: './images/BrandLogo/Greennut_logo-01.png',
+            tags: ['Logo', 'Identity', 'Brand']
+          },
+          {
+            title: 'Shinrai - Brand Logo',
+            desc: 'A refined brand mark with a calm, trustworthy visual direction.',
+            image: './images/BrandLogo/Brand_Indentity_Shinrai.png',
+            tags: ['Shinrai', 'Logo', 'Identity']
+          },
+          {
+            title: 'Codex - Main Logo',
+            desc: 'Primary Codex logo direction for the core brand identity.',
+            image: './images/BrandLogo/Codex_Logo_2.png',
+            thumbnail: './images/BrandLogo/Codex_Logo_2.png',
+            tags: ['Codex', 'Main Logo', 'Identity']
+          },
+          {
+            title: 'Codex - Twitter Logo',
+            desc: 'Twitter logo direction for Codex with a focused Shinrai-inspired identity treatment.',
+            image: './images/BrandLogo/Codex_Twitter_Logo.png',
+            thumbnail: './images/BrandLogo/Codex_Twitter_Logo.png',
+            tags: ['Codex', 'Twitter Logo', 'Shinrai']
+          },
+          {
+            title: 'Codex - Brand Extension',
+            desc: 'Background thumbnail direction for the Codex brand presence.',
+            image: './images/BrandLogo/Codex_Twitter_Banner.png',
+            thumbnail: './images/BrandLogo/Codex_Twitter_Banner.png',
+            tags: ['Codex', 'Background', 'Thumbnail']
+          },
+          {
+            title: 'Valee - Logo System',
+            desc: 'A polished logo treatment for a soft, premium brand presence.',
+            image: './images/BrandLogo/Valee_Logo.png',
+            tags: ['Valee', 'Logo', 'Brand']
+          },
+          {
+            title: 'Luis - Logo Mark',
+            desc: 'A clean logo direction with a confident, product-ready lockup.',
+            image: './images/BrandLogo/LUIS LOGO_TNCL.png',
+            tags: ['Luis', 'Logo', 'Mark']
+          }
+        ]
+      },
+      {
+        key: 'identity',
+        title: 'Identity System',
+        desc: 'Color, typography and layout rules that make the brand scalable.',
+        products: [
+          {
+            title: 'GreenNut - Identity Direction',
+            desc: 'Logo, tone and applied graphic language across a focused brand system.',
+            image: './images/BrandLogo/Greennut_logo-01.png',
+            tags: ['Identity', 'System']
+          },
+          {
+            title: 'Commercial Product Design',
+            desc: 'Applied visual identity across product-facing brand surfaces.',
+            image: './images/BrandLogo/Product-01.png',
+            tags: ['Applied Branding', 'Product']
+          }
+        ]
+      },
+      {
+        key: 'packaging',
+        title: 'Packaging',
+        desc: 'Product wraps, labels and launch-ready visual packaging concepts.',
+        products: [
+          {
+            title: 'Product Packaging Set',
+            desc: 'A compact product showcase for brand applications and packaging direction.',
+            image: './images/BrandLogo/Product-01.png',
+            tags: ['Packaging', 'Mockup']
+          },
+          {
+            title: 'Product Visual 02',
+            desc: 'Secondary package angle for visual identity extension.',
+            image: './images/BrandLogo/Product-02.png',
+            tags: ['Packaging', 'Brand']
+          },
+          {
+            title: 'Product Visual 03',
+            desc: 'Additional package view for campaign or case-study presentation.',
+            image: './images/BrandLogo/Product-03.png',
+            tags: ['Packaging', 'Showcase']
+          }
+        ]
+      },
+      {
+        key: 'guidelines',
+        title: 'Brand Guidelines',
+        desc: 'Rules for logo use, visual hierarchy and consistent brand rollout.',
+        products: [
+          {
+            title: 'Guideline Preview',
+            desc: 'A structured board for presenting logo usage and brand rules.',
+            image: './images/PublicationDesign/Logo-01-01.png',
+            tags: ['Guidelines', 'Layout']
+          }
+        ]
+      }
+    ]
+  },
+  motion: {
+    title: 'Motion Design',
+    desc: 'Kinetic typography, logo reveals, music visuals and cinematic intro systems.',
+    shots: [
+      {
+        key: 'logo-reveal',
+        title: 'Logo Reveal',
+        desc: 'Animated marks and reveal systems.',
+        products: [
+          {
+            title: 'Arclume - Logo Reveal',
+            desc: 'Signature logo reveal motion for the Arclume studio identity.',
+            video: 'https://www.youtube.com/embed/mIGMsKUx2X4?autoplay=1&rel=0',
+            thumbnail: 'https://img.youtube.com/vi/mIGMsKUx2X4/hqdefault.jpg',
+            tags: ['Arclume', 'Logo Reveal', 'Video']
+          },
+          {
+            title: 'Shinrai - Logo Reveal',
+            desc: 'Animated reveal system for the Shinrai identity.',
+            video: 'https://www.youtube.com/embed/tweG2x_Zijg?autoplay=1&rel=0',
+            thumbnail: 'https://img.youtube.com/vi/tweG2x_Zijg/hqdefault.jpg',
+            tags: ['Shinrai', 'Logo Reveal', 'Video']
+          },
+          {
+            title: 'Valee - Logo Reveal',
+            desc: 'Soft premium logo reveal motion for the Valee identity.',
+            video: 'https://www.youtube.com/embed/zR04GgXkxes?autoplay=1&rel=0',
+            thumbnail: 'https://img.youtube.com/vi/zR04GgXkxes/hqdefault.jpg',
+            tags: ['Valee', 'Logo Reveal', 'Video']
+          },
+          {
+            title: 'Luis - Logo Reveal',
+            desc: 'Logo reveal motion piece for the Luis brand mark.',
+            video: 'https://www.youtube.com/embed/apZG4iKDd3w?autoplay=1&rel=0',
+            thumbnail: 'https://img.youtube.com/vi/apZG4iKDd3w/hqdefault.jpg',
+            tags: ['Luis', 'Logo Reveal', 'Video']
+          },
+          {
+            title: 'Client Order Sample - Logo Reveal',
+            desc: 'Commission-style logo reveal sample for client presentation.',
+            video: 'https://www.youtube.com/embed/VXaPwFdIY2c?autoplay=1&rel=0',
+            thumbnail: 'https://img.youtube.com/vi/VXaPwFdIY2c/hqdefault.jpg',
+            tags: ['Client Sample', 'Logo Reveal', 'Video']
+          }
+        ]
+      },
+      { key: 'kinetic-type', title: 'Kinetic Type', desc: 'Typography with rhythm, speed and impact.', products: [] },
+      { key: 'music-visual', title: 'Music Visual', desc: 'Audio-reactive and cinematic visual motion.', products: [] },
+      { key: 'intro-motion', title: 'Intro Motion', desc: 'Opening sequences and title treatments.', products: [] }
+    ]
+  },
+  digital: {
+    title: 'Digital Experiences',
+    desc: 'Interactive interfaces, responsive websites, prototypes and UI motion.',
+    shots: [
+      { key: 'website-ui', title: 'Website UI', desc: 'Responsive web screens and visual systems.', products: [] },
+      { key: 'interactive-prototype', title: 'Interactive Prototype', desc: 'Clickable flows for testing ideas fast.', products: [] },
+      { key: 'ui-components', title: 'UI Components', desc: 'Reusable interface blocks and states.', products: [] },
+      { key: 'motion-interface', title: 'Motion Interface', desc: 'Micro-interactions and interface animation.', products: [] }
+    ]
+  },
+  world: {
+    title: 'World Building',
+    desc: 'Game concepts, environments, visual storytelling and character/world systems.',
+    shots: [
+      { key: 'game-world', title: 'Game World', desc: 'Visual worlds, rules and atmosphere.', products: [] },
+      { key: 'pixel-assets', title: 'Pixel Assets', desc: 'Sprite sets, game props and icons.', products: [] },
+      { key: 'environment', title: 'Environment', desc: 'Scene direction and spatial mood.', products: [] },
+      { key: 'visual-lore', title: 'Visual Lore', desc: 'Narrative design systems and myth cues.', products: [] }
+    ]
+  }
+};
 
-    document.querySelectorAll('.step-detail').forEach(detail => {
-      detail.style.display = 'none';
-    });
+const showcasePanel = document.getElementById('showcasePanel');
+const showcaseTitle = document.getElementById('showcaseTitle');
+const showcaseDesc = document.getElementById('showcaseDesc');
+const showcaseGrid = document.getElementById('showcaseGrid');
+const productShowcase = document.getElementById('productShowcase');
+const productShowcaseTitle = document.getElementById('productShowcaseTitle');
+const productShowcaseDesc = document.getElementById('productShowcaseDesc');
+const productGrid = document.getElementById('productGrid');
+const showcaseBack = document.getElementById('showcaseBack');
+const imageLightbox = document.getElementById('imageLightbox');
+const imageLightboxImg = document.getElementById('imageLightboxImg');
+const imageLightboxVideo = document.getElementById('imageLightboxVideo');
+const imageLightboxCaption = document.getElementById('imageLightboxCaption');
+const imageLightboxClose = document.getElementById('imageLightboxClose');
 
-    if (target) {
-      target.style.display = 'block';
-    }
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function renderShowcaseShots(data) {
+  showcaseGrid.innerHTML = data.shots
+    .map(shot => `
+      <button class="showcase-shot" type="button" data-shot="${escapeHtml(shot.key)}">
+        <span>
+          <b>${escapeHtml(shot.title)}</b>
+          <span>${escapeHtml(shot.desc)}</span>
+        </span>
+      </button>
+    `)
+    .join('');
+
+  productShowcase.classList.remove('open');
+  productGrid.innerHTML = '';
+}
+
+function renderProductShowcase(shot) {
+  productShowcaseTitle.textContent = `${shot.title} Showcase`;
+  productShowcaseDesc.textContent = shot.products.length
+    ? shot.desc
+    : 'This service board is ready for future products. Add items in showcaseData to publish them here.';
+
+  productGrid.innerHTML = shot.products.length
+    ? shot.products.map(product => {
+        const thumbnail = product.thumbnail || product.image || '';
+        const mediaAttr = product.video
+          ? `data-lightbox-video="${escapeHtml(product.video)}"`
+          : `data-lightbox-image="${escapeHtml(product.image)}"`;
+
+        return `
+          <article class="product-card">
+            <button class="product-cover" type="button" style="background-image:url('${escapeHtml(thumbnail)}')" ${mediaAttr} data-lightbox-title="${escapeHtml(product.title)}" aria-label="Preview ${escapeHtml(product.title)}"></button>
+            <div class="product-copy">
+              <h5>${escapeHtml(product.title)}</h5>
+              <p>${escapeHtml(product.desc)}</p>
+              <div class="product-tags">
+                ${product.tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('')}
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('')
+    : '';
+
+  showcaseGrid.querySelectorAll('.showcase-shot').forEach(card => {
+    card.classList.toggle('is-selected', card.dataset.shot === shot.key);
   });
-});
 
-document.querySelectorAll('.step[data-step]').forEach(step => {
-  step.addEventListener('click', () => {
-    const id = step.dataset.step;
+  productShowcase.classList.add('open');
+}
 
-    document.querySelectorAll('.step').forEach(item => {
-      item.classList.remove('is-active');
-    });
-    step.classList.add('is-active');
+function openImageLightbox(image, title) {
+  if (!imageLightbox || !imageLightboxImg || !imageLightboxCaption) return;
 
-    document.querySelectorAll('.pv-stage').forEach(panel => {
-      panel.classList.remove('active');
-    });
-
-    const target = document.querySelector(`.pv-stage[data-panel="${id}"]`);
-    if (target) target.classList.add('active');
-  });
-});
-
-const reelScenes = document.querySelectorAll('.reel-scene');
-let reelIndex = 0;
-
-function playSystemReel() {
-  reelScenes.forEach(scene => scene.classList.remove('active'));
-
-  if (reelScenes[reelIndex]) {
-    reelScenes[reelIndex].classList.add('active');
+  if (imageLightboxVideo) {
+    imageLightboxVideo.src = '';
+    imageLightboxVideo.title = '';
+    imageLightboxVideo.style.display = 'none';
   }
 
-  reelIndex = (reelIndex + 1) % reelScenes.length;
+  imageLightboxImg.src = image;
+  imageLightboxImg.alt = title;
+  imageLightboxImg.style.display = 'block';
+  imageLightboxCaption.textContent = title;
+  imageLightbox.classList.add('open');
+  imageLightbox.setAttribute('aria-hidden', 'false');
 }
 
-if (reelScenes.length) {
-  playSystemReel();
-  setInterval(playSystemReel, 6600);
+function openVideoLightbox(video, title) {
+  if (!imageLightbox || !imageLightboxVideo || !imageLightboxImg || !imageLightboxCaption) return;
+
+  imageLightboxImg.src = '';
+  imageLightboxImg.alt = '';
+  imageLightboxImg.style.display = 'none';
+  imageLightboxVideo.src = video;
+  imageLightboxVideo.title = title;
+  imageLightboxVideo.style.display = 'block';
+  imageLightboxCaption.textContent = title;
+  imageLightbox.classList.add('open');
+  imageLightbox.setAttribute('aria-hidden', 'false');
 }
 
+function closeImageLightbox() {
+  if (!imageLightbox || !imageLightboxImg) return;
+
+  imageLightbox.classList.remove('open');
+  imageLightbox.setAttribute('aria-hidden', 'true');
+  imageLightboxImg.src = '';
+  imageLightboxImg.alt = '';
+  imageLightboxImg.style.display = 'block';
+  if (imageLightboxVideo) {
+    imageLightboxVideo.src = '';
+    imageLightboxVideo.title = '';
+    imageLightboxVideo.style.display = 'none';
+  }
+}
+
+document.querySelectorAll('.step').forEach(step => {
+  step.addEventListener('click', () => {
+    const key = step.dataset.step;
+    const data = showcaseData[key];
+    if (!data) return;
+
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('is-active'));
+    step.classList.add('is-active');
+
+    showcaseTitle.textContent = data.title;
+    showcaseDesc.textContent = data.desc;
+    showcasePanel.dataset.activeStep = key;
+    renderShowcaseShots(data);
+
+    showcasePanel.classList.add('open');
+  });
+});
+
+showcaseGrid?.addEventListener('click', event => {
+  const card = event.target.closest('.showcase-shot');
+  if (!card) return;
+
+  const activeStep = showcasePanel.dataset.activeStep;
+  const stepData = showcaseData[activeStep];
+  const shot = stepData?.shots.find(item => item.key === card.dataset.shot);
+  if (!shot) return;
+
+  renderProductShowcase(shot);
+});
+
+showcaseBack?.addEventListener('click', () => {
+  productShowcase.classList.remove('open');
+  productGrid.innerHTML = '';
+  showcaseGrid.querySelectorAll('.showcase-shot').forEach(card => card.classList.remove('is-selected'));
+});
+
+productGrid?.addEventListener('click', event => {
+  const preview = event.target.closest('[data-lightbox-image], [data-lightbox-video]');
+  if (!preview) return;
+
+  const title = preview.dataset.lightboxTitle || 'Media preview';
+
+  if (preview.dataset.lightboxVideo) {
+    openVideoLightbox(preview.dataset.lightboxVideo, title);
+    return;
+  }
+
+  openImageLightbox(preview.dataset.lightboxImage, title);
+});
+
+imageLightboxClose?.addEventListener('click', closeImageLightbox);
+
+imageLightbox?.addEventListener('click', event => {
+  if (event.target === imageLightbox) closeImageLightbox();
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && imageLightbox?.classList.contains('open')) {
+    closeImageLightbox();
+  }
+});
+
+document.querySelector('.showcase-close')?.addEventListener('click', () => {
+  showcasePanel.classList.remove('open');
+  productShowcase.classList.remove('open');
+  productGrid.innerHTML = '';
+  closeImageLightbox();
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('is-active'));
+});
 </script>
-
 </body>
 </html>
