@@ -2936,6 +2936,27 @@ text-align: center;
   outline-offset: -4px;
 }
 
+.product-cover--text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  padding: 20px;
+  cursor: default;
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: .02em;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0,213,255,.22), transparent 32%),
+    radial-gradient(circle at 80% 30%, rgba(219,85,255,.2), transparent 34%),
+    linear-gradient(135deg, rgba(15,24,46,.96), rgba(24,17,42,.96));
+}
+
+.product-cover--text span {
+  max-width: 12rem;
+}
+
 .product-card:hover .product-cover {
   filter: brightness(1.08);
   transform: scale(1.02);
@@ -5017,53 +5038,106 @@ const showcaseData = {
   },
   motion: {
     title: 'Motion Design',
-    desc: 'Kinetic typography, logo reveals, music visuals and cinematic intro systems.',
+    desc: 'Brand motion, kinetic type, event openers and music visuals.',
     shots: [
       {
-        key: 'logo-reveal',
-        title: 'Logo Reveal',
-        desc: 'Animated marks and reveal systems.',
+        key: 'brand-motion',
+        title: 'Brand Motion',
+        desc: 'Logo Reveal / Identity Animation',
         products: [
           {
             title: 'Arclume - Logo Reveal',
             desc: 'Signature logo reveal motion for the Arclume studio identity.',
             video: 'https://www.youtube.com/embed/mIGMsKUx2X4?autoplay=1&rel=0',
             thumbnail: 'https://img.youtube.com/vi/mIGMsKUx2X4/hqdefault.jpg',
-            tags: ['Arclume', 'Logo Reveal', 'Video']
+            tags: ['Brand Motion', 'Logo Reveal', 'Video']
           },
           {
             title: 'Shinrai - Logo Reveal',
             desc: 'Animated reveal system for the Shinrai identity.',
             video: 'https://www.youtube.com/embed/tweG2x_Zijg?autoplay=1&rel=0',
             thumbnail: 'https://img.youtube.com/vi/tweG2x_Zijg/hqdefault.jpg',
-            tags: ['Shinrai', 'Logo Reveal', 'Video']
+            tags: ['Brand Motion', 'Logo Reveal', 'Video']
           },
           {
             title: 'Valee - Logo Reveal',
             desc: 'Soft premium logo reveal motion for the Valee identity.',
             video: 'https://www.youtube.com/embed/zR04GgXkxes?autoplay=1&rel=0',
             thumbnail: 'https://img.youtube.com/vi/zR04GgXkxes/hqdefault.jpg',
-            tags: ['Valee', 'Logo Reveal', 'Video']
+            tags: ['Brand Motion', 'Logo Reveal', 'Video']
           },
           {
             title: 'Luis - Logo Reveal',
             desc: 'Logo reveal motion piece for the Luis brand mark.',
             video: 'https://www.youtube.com/embed/apZG4iKDd3w?autoplay=1&rel=0',
             thumbnail: 'https://img.youtube.com/vi/apZG4iKDd3w/hqdefault.jpg',
-            tags: ['Luis', 'Logo Reveal', 'Video']
+            tags: ['Brand Motion', 'Logo Reveal', 'Video']
           },
           {
             title: 'Client Order Sample - Logo Reveal',
             desc: 'Commission-style logo reveal sample for client presentation.',
             video: 'https://www.youtube.com/embed/VXaPwFdIY2c?autoplay=1&rel=0',
             thumbnail: 'https://img.youtube.com/vi/VXaPwFdIY2c/hqdefault.jpg',
-            tags: ['Client Sample', 'Logo Reveal', 'Video']
+            tags: ['Brand Motion', 'Logo Reveal', 'Video']
+          },
+          {
+            title: 'Identity Animation',
+            desc: 'Motion systems for brand marks, identity elements and flexible visual language.',
+            tags: ['Brand Motion', 'Identity Animation']
           }
         ]
       },
-      { key: 'kinetic-type', title: 'Kinetic Type', desc: 'Typography with rhythm, speed and impact.', products: [] },
-      { key: 'music-visual', title: 'Music Visual', desc: 'Audio-reactive and cinematic visual motion.', products: [] },
-      { key: 'intro-motion', title: 'Intro Motion', desc: 'Opening sequences and title treatments.', products: [] }
+      {
+        key: 'kinetic-type',
+        title: 'Kinetic Type',
+        desc: 'Typography Systems',
+        products: [
+          {
+            title: 'Typography Systems',
+            desc: 'Type-led motion systems with rhythm, hierarchy and expressive timing.',
+            tags: ['Kinetic Type', 'Typography Systems']
+          }
+        ]
+      },
+      {
+        key: 'event-opener',
+        title: 'Event Opener',
+        desc: 'Year End Party / Ceremony Intro / Corporate Opening',
+        products: [
+          {
+            title: 'Year End Party',
+            desc: 'Opening motion direction for festive company events and celebration nights.',
+            tags: ['Event Opener', 'Year End Party']
+          },
+          {
+            title: 'Ceremony Intro',
+            desc: 'Cinematic intro systems for formal ceremonies and award moments.',
+            tags: ['Event Opener', 'Ceremony Intro']
+          },
+          {
+            title: 'Corporate Opening',
+            desc: 'Clean, premium opening sequences for business presentations and corporate stages.',
+            tags: ['Event Opener', 'Corporate Opening']
+          }
+        ]
+      },
+      {
+        key: 'music-visual',
+        title: 'Music Visual',
+        desc: 'Audio Reactive / Concert Visuals',
+        products: [
+          {
+            title: 'Audio Reactive',
+            desc: 'Visual systems that respond to rhythm, intensity and sonic atmosphere.',
+            tags: ['Music Visual', 'Audio Reactive']
+          },
+          {
+            title: 'Concert Visuals',
+            desc: 'Stage-ready visual loops and screen motion for music-led experiences.',
+            tags: ['Music Visual', 'Concert Visuals']
+          }
+        ]
+      }
     ]
   },
   digital: {
@@ -5139,11 +5213,16 @@ function renderProductShowcase(shot) {
         const thumbnail = product.thumbnail || product.image || '';
         const mediaAttr = product.video
           ? `data-lightbox-video="${escapeHtml(product.video)}"`
-          : `data-lightbox-image="${escapeHtml(product.image)}"`;
+          : product.image
+            ? `data-lightbox-image="${escapeHtml(product.image)}"`
+            : '';
+        const cover = mediaAttr
+          ? `<button class="product-cover" type="button" style="background-image:url('${escapeHtml(thumbnail)}')" ${mediaAttr} data-lightbox-title="${escapeHtml(product.title)}" aria-label="Preview ${escapeHtml(product.title)}"></button>`
+          : `<div class="product-cover product-cover--text"><span>${escapeHtml(product.title)}</span></div>`;
 
         return `
           <article class="product-card">
-            <button class="product-cover" type="button" style="background-image:url('${escapeHtml(thumbnail)}')" ${mediaAttr} data-lightbox-title="${escapeHtml(product.title)}" aria-label="Preview ${escapeHtml(product.title)}"></button>
+            ${cover}
             <div class="product-copy">
               <h5>${escapeHtml(product.title)}</h5>
               <p>${escapeHtml(product.desc)}</p>
